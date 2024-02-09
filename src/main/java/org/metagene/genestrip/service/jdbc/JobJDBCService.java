@@ -134,7 +134,7 @@ public class JobJDBCService extends AbstractDTOJDBCService<Job> implements JobSe
 		try {
 			c = getConnection();
 
-			PreparedStatement ps = c.prepareStatement("select id from job where status = ? order by started");
+			PreparedStatement ps = c.prepareStatement("select id from job where status = ? order by enqueued");
 			ps.setInt(1, JobStatus.ENQUEUED.ordinal());
 			ResultSet rs = ps.executeQuery();
 			List<Long> l = new ArrayList<Long>();
