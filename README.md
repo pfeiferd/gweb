@@ -22,7 +22,7 @@
 GWeb  
 ====
 
-GWeb is hybrid Web application to run jobs for genomic analysis using [Genestrip](https://github.com/pfeiferd/genestrip).
+GWeb a is hybrid Web application to run jobs for genomic analysis using [Genestrip](https://github.com/pfeiferd/genestrip).
 
 ## License
 
