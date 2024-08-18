@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Context privileged="true" antiResourceLocking="false"
+	antiJARLocking="false" debug="1" reloadable="true" path="">
+	<Resource name="jdbc/gwebdb"
+		factory="org.apache.commons.dbcp.BasicDataSourceFactory" username="postgres"
+		password="postgres" type="javax.sql.DataSource" auth="Container"
+		driverClassName="org.postgresql.Driver" url="jdbc:postgresql://localhost/gweb"
+		testOnBorrow="false" />		
+</Context>

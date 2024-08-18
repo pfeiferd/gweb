@@ -1,0 +1,120 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.genestrip</groupId>
+	<artifactId>gweb</artifactId>
+	<version>${revision}</version>
+	<packaging>pom</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<revision>0.3</revision>
+	</properties>
+
+	<name>gweb</name>
+	<description>A hybrid web application to run jobs with Genestrip</description>
+	<url>https://github.com/pfeiferd/gweb</url>
+	<inceptionYear>2024</inceptionYear>
+
+	<organization>
+		<name>Progotec</name>
+		<url>http://www.progotec.de</url>
+	</organization>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0 subject to Commons Clause License Condition 1.0</name>
+			<url>https://raw.githubusercontent.com/pfeiferd/gweb/master/LICENSE.txt</url>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:git://github.com/pfeiferd/gweb.git</connection>
+		<developerConnection>scm:git:ssh://github.com/pfeiferd/gweb.git</developerConnection>
+		<url>https://github.com/pfeiferd/gweb/tree/master</url>
+	</scm>
+
+	<developers>
+		<developer>
+			<name>Daniel Pfeifer</name>
+			<email>daniel.pfeifer@progotec.de</email>
+		</developer>
+	</developers>
+
+	<modules>
+		<module>gweb-service</module>
+		<module>gweb-ui</module>
+		<module>gweb-local</module>
+		<module>gweb-launcher</module>
+	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>flatten-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<configuration></configuration>
+				<executions>
+					<!-- enable flattening -->
+					<execution>
+						<id>flatten</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>flatten</goal>
+						</goals>
+					</execution>
+					<!-- ensure proper cleanup -->
+					<execution>
+						<id>flatten.clean</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<profiles>
+		<profile>
+			<id>spotless</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.diffplug.spotless</groupId>
+						<artifactId>spotless-maven-plugin</artifactId>
+						<version>2.43.0</version>
+						<configuration>
+							<java>
+								<lineEndings>UNIX</lineEndings>
+								<includes>
+									<include>src/main/java/**/*.java</include>
+									<include>src/test/java/**/*.java</include>
+								</includes>
+								<licenseHeader>
+									<file>./license-header</file>
+								</licenseHeader>
+							</java>
+							<typescript>
+								<includes>
+									<include>src/main/webapp/**/*.js</include>
+								</includes>
+								<licenseHeader>
+									<content>/* Software: gweb, License: Apache 2.0 subject to “Commons Clause” License Condition v1.0, Licensor: Daniel Pfeifer (daniel.pfeifer@progotec.de) */</content>
+									<delimiter>//</delimiter>
+								</licenseHeader>
+							</typescript>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>check</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

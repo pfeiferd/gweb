@@ -1,0 +1,348 @@
+body {
+	margin: 8px;
+}
+
+* {
+	font-family: Verdana;
+	font-size: 11pt;
+}
+
+.title {
+	font-weight: bold;
+	font-size: 13pt;
+	font-style: italic;
+	color: #00664d;
+}
+
+button {
+	background-color: #0084ff;
+	padding: 2px 4px 2px 4px;
+	border: 1px solid #ddd;
+	color: white;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	cursor: default;
+	border-radius: 5px;
+	white-space: nowrap;
+}
+
+button:disabled {
+	background-color: #b3daff;
+	cursor: not-allowed;
+}
+
+button:enabled:hover {
+	color: black;
+	background-color: rgba(255, 178, 178);
+}
+
+.sbutton {
+	background-color: white;
+	padding: 2px 4px 2px 4px;
+	border: 1px solid #ddd;
+	color: black;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	cursor: default;
+	border-radius: 5px;
+	white-space: nowrap;
+}
+
+.sbutton:disabled {
+	background-color: #b3daff;
+	cursor: not-allowed;
+}
+
+.sbutton:enabled:hover {
+	color: black;
+	background-color: rgba(255, 178, 178);
+}
+
+.sortable {
+	white-space: nowrap;
+}
+
+.sortable:hover {
+	background-color: rgba(255, 178, 178);
+}
+
+.jobstart {
+	background-color: #00664d;
+}
+
+.jobstart:disabled {
+	background-color: #b3daff;
+	cursor: not-allowed;
+}
+
+.jobstart:enabled:hover {
+	color: black;
+	background-color: rgb(119, 201, 164);
+}
+
+.jobstop {
+	background-color: rgba(255, 0, 0, 0.9);
+}
+
+.jobstop:enabled:hover {
+	color: black;
+	background-color: rgba(255, 0, 0, 0.5);
+}
+
+input[type=text], [type=password] {
+	width: 100%;
+	background-color: #f2f2f2;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	padding: 2px 4px 2px 4px;
+	box-sizing: border-box;
+}
+
+input[type=text].mandatory, [type=password].mandatory {
+	width: 100%;
+	background-color: rgba(255, 0, 0, 0.1);
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	padding: 2px 4px 2px 4px;
+	box-sizing: border-box;
+}
+
+input[type=text]:focus, [type=password]:focus {
+	width: 100%;
+	background-color: #b3daff;
+	outline: 0;
+}
+
+input[type=text]:disabled, [type=password]:disabled {
+	width: 100%;
+	background-color: white;
+}
+
+select {
+	width: 100%;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	padding: 2px 4px 2px 4px;
+	box-sizing: border-box;
+}
+
+select.mandatory {
+	background-color: rgba(255, 0, 0, 0.1);
+}
+
+#lan {
+	padding-bottom: 2px;
+}
+
+.selectedlan {
+	display: inline-block;
+	white-space: nowrap;
+}
+
+.selectedlan>span {
+	border: 2px solid #0084ff;
+	border-width: 0px 0px 2px 0px;
+}
+
+.lan {
+	display: inline-block;
+	white-space: nowrap;
+}
+
+.lan:hover>span {
+	border: 2px solid rgba(255, 0, 0, 0.6);
+	border-width: 0px 0px 2px 0px;
+	cursor: default;
+}
+
+.lan:hover>.feather {
+	stroke: rgba(255, 0, 0, 0.6);
+	cursor: default;
+}
+
+.selectedtab {
+	padding: 2px 4px 2px 4px;
+	margin: 0px 0px 2px 0px;
+	display: inline-block;
+	border-style: solid;
+	border-width: 1px 1px 0px 1px;
+	border-color: gray;
+	border-radius: 5px 5px 0px 0px;
+}
+
+.selectedtab>span {
+	border: 2px solid #0084ff;
+	border-width: 0px 0px 2px 0px;
+}
+
+.tab {
+	padding: 2px 5px 2px 5px;
+	margin: 0px 0px 2px 0px;
+	display: inline-block;
+}
+
+.tab:hover>.feather {
+	stroke: rgba(255, 0, 0, 0.6);
+	cursor: default;
+}
+
+.tab:hover>span {
+	border: 2px solid rgba(255, 0, 0, 0.6);
+	border-width: 0px 0px 2px 0px;
+	cursor: default;
+}
+
+.hline {
+	display: block;
+	margin-top: 4px;
+	border-style: solid;
+	border-width: 0px 0px 1px 0px;
+	border-color: gray;
+	z-index: -1;
+}
+
+.tab:hover {
+	cursor: default;
+}
+
+.center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.right {
+	position: absolute;
+	right: 0px;
+}
+
+.content {
+	position: relative;
+	margin: 4px;
+}
+
+.down {
+	margin-top: 4px;
+}
+
+.fbline {
+	padding-top: 4px;
+}
+
+.formtable {
+	position: relative;
+	border-collapse: collapse;
+	width: 100%;
+	/*table-layout: fixed;*/
+}
+
+.formtable td, th {
+	border: 0px;
+}
+
+.datatable {
+	position: relative;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.datatable thead {
+	position: sticky;
+	top: 0px;
+}
+
+.datatable thead tr th {
+	padding: 2px 4px 2px 4px;
+	background-color: #ddd;
+}
+
+.datatable td, th {
+	border: 1px solid #ddd;
+	padding: 2px 4px 2px 4px;
+}
+
+.tselected {
+	background-color: #0084ff;
+	color: white;
+}
+
+.datatable tr.tnormal:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+.datatable tr.tnormal:hover {
+	color: black;
+	background-color: rgba(255, 178, 178);
+}
+
+th {
+	text-align: left;
+	background-color: white;
+	font-weight: normal;
+}
+
+.errortitle {
+	font-weight: bold;
+}
+
+.div-table-scroll {
+	height: 30vh;
+	overflow-y: scroll;
+}
+
+.table-scroll thead th {
+	position: sticky;
+	top: 0;
+}
+
+.modal {
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgb(0, 0, 0);
+	background-color: rgba(0, 0, 0, 0.25);
+}
+
+.modal-content {
+	background-color: white;
+	margin: 15% auto;
+	padding: 8px;
+	border: 1px solid gray;
+	border-radius: 5px;
+	width: 80%;
+	max-width: 500px;
+}
+
+.feather {
+	vertical-align: text-bottom;
+	width: 16px;
+	height: 16px;
+	stroke: #0084ff;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	fill: none;
+}
+
+.featherc {
+	vertical-align: text-bottom;
+	width: 16px;
+	height: 16px;
+	stroke: currentColor;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	fill: none;
+}
+
+.datalink {
+	font-family: monospace;
+}

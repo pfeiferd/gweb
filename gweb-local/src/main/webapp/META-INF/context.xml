@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Context privileged="true" antiResourceLocking="false"
+	antiJARLocking="false" debug="1" reloadable="true" path="">
+	<Resource name="jdbc/gwebdb"
+		factory="org.apache.commons.dbcp.BasicDataSourceFactory"
+		username="sa" password="" type="javax.sql.DataSource"
+		auth="Container" driverClassName="org.hsqldb.jdbc.JDBCDriver"
+		url="jdbc:hsqldb:file:../data/gwebdb;hsqldb.lock_file=false" />
+</Context>

@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>gweb</artifactId>
+		<groupId>org.genestrip</groupId>
+		<version>${revision}</version>
+	</parent>
+	<artifactId>gweb-local</artifactId>
+	<packaging>war</packaging>
+
+	<dependencies>
+		<dependency>
+			<artifactId>gweb-ui</artifactId>
+			<groupId>${project.groupId}</groupId>
+			<version>${project.version}</version>
+			<type>war</type>
+			<scope>runtime</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.4.0</version>
+				<configuration>
+					<overlays>
+						<overlay></overlay>
+					</overlays>
+					<attachClasses>true</attachClasses>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
