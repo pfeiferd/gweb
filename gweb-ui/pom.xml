@@ -14,9 +14,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.genestrip</groupId>
 			<artifactId>gweb-service</artifactId>
-			<version>${revision}</version>
+			<groupId>${project.groupId}</groupId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-pool</groupId>
