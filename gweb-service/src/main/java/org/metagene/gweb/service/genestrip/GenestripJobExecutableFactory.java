@@ -155,12 +155,12 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 			};
 			if (!project.getProjectsDir().exists()) {
 				project.getProjectsDir().mkdir();
-				if (!project.getProjectDir().exists()) {
-					project.getProjectDir().mkdir();
-					if (!project.getLogDir().exists()) {
-						project.getLogDir().mkdir();
-					}
-				}
+			}
+			if (!project.getProjectDir().exists()) {
+				project.getProjectDir().mkdir();
+			}
+			if (!project.getLogDir().exists()) {
+				project.getLogDir().mkdir();
 			}
 			File logFile = new File(project.getLogDir(), job.getId() + FileType.LOG.getSuffix());
 			try (OutputStream logOut = new FileOutputStream(logFile)) {
