@@ -310,7 +310,7 @@ function bindDBInfoCSV(db) {
 function updateDBInstalled(db) {
 	document.getElementById("dbisinstalled").checked = db != null && db.installed;
 	document.getElementById("dbinstallbutton").disabled = db == null || hasDBInFormChanged() || !isAdmin(loggedInUser) || db.id == -1 || db.installURL == null;
-	document.getElementById("dbinfobutton").disabled = db == null || !db.installed;
+	document.getElementById("dbinfobutton").disabled = db == null || !db.installed  || !isAdmin(loggedInUser);
 }
 
 function installDB() {

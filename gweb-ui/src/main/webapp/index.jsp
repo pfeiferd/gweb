@@ -57,17 +57,20 @@ String version = Version.class.getPackage().getImplementationVersion();
 					<tr>
 						<td align="right"><span data-i18n="user"></span></td>
 						<td><input class="mandatory" type="text" id="fuser"
-							oninput="checkLogin()" maxlength="<%=User.LOGIN_SIZE%>" form="loginform"></td>
+							oninput="checkLogin()" maxlength="<%=User.LOGIN_SIZE%>"
+							form="loginform"></td>
 					</tr>
 					<tr>
 						<td align="right"><span data-i18n="password"></span></td>
 						<td><input type="password" id="fpassword"
-							oninput="checkLogin()" maxlength="<%=User.PASSWORD_SIZE%>" form="loginform"></td>
+							oninput="checkLogin()" maxlength="<%=User.PASSWORD_SIZE%>"
+							form="loginform"></td>
 					</tr>
 					<tr>
 						<td></td>
 						<td align="right">
-							<button type="button" id="loginbutton" onclick="loginUser()" form="loginform">
+							<button type="button" id="loginbutton" onclick="loginUser()"
+								form="loginform">
 								<span data-i18n="login"></span>
 								<svg class="featherc">
 									<use href="feather-sprite.svg#log-in" /></svg>
@@ -209,7 +212,8 @@ String version = Version.class.getPackage().getImplementationVersion();
 								<td><div id="crcheckbox">
 										<input type="checkbox" id="classifyreads"
 											oninput="checkJobInForm()">
-									</div></td>
+									<span data-i18n="errorrate"></span> <input type="number" min="0" step="0.01" id="errorratefield" style="width:200px;"
+									oninput="checkJobInForm()" maxlength="20"></div></td>
 								<td align="right"><span data-i18n="jstarted"></span></td>
 								<td id="jstarted"></td>
 							</tr>
@@ -367,6 +371,13 @@ String version = Version.class.getPackage().getImplementationVersion();
 							<tr>
 								<td align="right"><span data-i18n="foruser"></span></td>
 								<td><select id="forresuser" oninput="checkResInForm()"></select></td>
+							</tr>
+							<tr>
+								<td align="right"><span data-i18n="restype"></span></td>
+								<td><select id="restype">
+										<option id="HTTP_URL" value="HTTP_URL"></option>
+										<option id="FILE_PATH" value="FILE_PATH" disabled></option>
+								</select></td>
 							</tr>
 							<tr>
 								<td align="right"><span data-i18n="resurlf"></span></td>
@@ -730,8 +741,11 @@ String version = Version.class.getPackage().getImplementationVersion();
 						</tbody>
 					</table>
 				</div>
+			</div>
+			<div class="hline"></div>
+			<div id="footer" style="position: relative;">
+				<div class="down left"><jsp:include page="leftfooter.jsp"/></div>
 				<div id="userinfo">
-					<div class="hline"></div>
 					<div class="down right">
 						<span data-i18n="loggedinas"></span> <span id="username"></span> /
 						<span data-i18n="role"></span> <span id="userrole"></span>

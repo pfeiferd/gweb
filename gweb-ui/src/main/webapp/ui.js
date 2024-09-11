@@ -158,7 +158,11 @@ var i18n = {
 		dbinstallmd5: "MD5:",
 		reallyReplaceDBInfo: "Die Datenbank-Info wurde bereits erzeugt. Wollen Sie sie wirklich ersetzen?",
 		reallyDoDBInfo: "Wollen Sie den Datenkanf-Info-Job wirklich starten?",
-		classifyReads: "Mit Read-Klassifikation:"
+		classifyReads: "Mit Read-Klassifikation:",
+		errorrate: "Fehlerrate:",
+		restype: "Typ:",
+		FILE_PATH: "Dateipfad auf Server",
+		HTTP_URL: "HTTP(S)"
 	},
 	en: {
 		de: "Deutsch",
@@ -280,12 +284,18 @@ var i18n = {
 		dbinstallmd5: "MD5:",
 		reallyReplaceDBInfo: "The database info file is already created. Do you really want to replace it?",
 		reallyDoDBInfo: "Do really want to start the DB info job?",
-		classifyReads: "With Read Classifcation:"
+		classifyReads: "With Read Classifcation:",
+		errorrate: "Error Rate:",
+		restype: "Type:",
+		FILE_PATH: "File Path on Server",
+		HTTP_URL: "HTTP(S)"
 	}
 };
 
 function changeLan(lan) {
 	state.currentLan = lan;
+	document.documentElement.setAttribute("lang", lan);
+	
 	var lans = Object.keys(i18n);
 	for (var i = 0; i < lans.length; i++) {
 		var tab = document.getElementById(lans[i] + "lan");
@@ -307,6 +317,8 @@ function changeLan(lan) {
 	document.getElementById("RES_MATCH").textContent = i18n[state.currentLan]["RES_MATCH"];
 	document.getElementById("DB_INFO").textContent = i18n[state.currentLan]["DB_INFO"];
 	document.getElementById("INSTALL_DB").textContent = i18n[state.currentLan]["INSTALL_DB"];
+	document.getElementById("HTTP_URL").textContent = i18n[state.currentLan]["HTTP_URL"];
+	document.getElementById("FILE_PATH").textContent = i18n[state.currentLan]["FILE_PATH"];
 
 	if (loggedInUser != null) {
 		updateRole();
@@ -480,7 +492,7 @@ function isValidHttpUrl(string) {
 		return false;
 	}
 
-	return url.protocol === "http:" || url.protocol === "https:";
+	return url.protocol == "http:" || url.protocol == "https:";
 }
 
 /* Ajax request handling */

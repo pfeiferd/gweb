@@ -197,6 +197,15 @@ function checkJobInForm() {
 	document.getElementById("savejobbutton").disabled = !validated || !changed;
 	document.getElementById("startjobbutton").disabled = !(validated && !changed && selectedJob != null && selectedJob.status == "CREATED");
 
+	var classify = document.getElementById("classifyreads").checked;
+	document.getElementById("errorratefield").disabled = !classify;
+	if (!classify) {
+		var v = parseFloat(document.getElementById("errorratefield").value);
+		if (!(v >= 0)) {
+			document.getElementById("errorratefield").value = errorRateDefault;
+		}
+	}
+	
 	updateStartStopButtons(selectedJob != null && (selectedJob.status == "STARTED" || selectedJob.status == "ENQUEUED"));
 }
 
@@ -237,8 +246,9 @@ function validateJobInForm() {
 	var validURL = !updateMandatory("fastqurlsel", selectedJob != null && job.status == null && job.resourceId == -1 && isMatchType);
 	var validD = !updateMandatory("fordb", selectedJob != null && job.dbId == null);
 	var validUser = !updateMandatory("foruser", selectedJob != null && job.userId == null);
+	var validER = !updateMandatory("errorratefield", job.classifyReads && selectedJob != null && isMatchType && !(job.errorRate >= 0));
 
-	return validU && (validF || validURL) && validD && validUser;
+	return validU && (validF || validURL) && validD && validUser && validER;
 }
 
 function createJob() {
@@ -269,6 +279,7 @@ function newJob() {
 	job.coveredBytes = null;
 	job.jobType = "LOCAL_MATCH";
 	job.classifyReads = false;
+	job.errorRate = errorRateDefault;
 
 	return job;
 }
@@ -386,6 +397,7 @@ function extractJobFromForm(job) {
 	job.userId = getJobUserFromForm();
 
 	job.classifyReads = document.getElementById("classifyreads").checked && (job.jobType == "LOCAL_MATCH" || job.jobType == "RES_MATCH");
+	job.errorRate = parseFloat(document.getElementById("errorratefield").value);
 
 	return job;
 }
@@ -436,6 +448,7 @@ function bindJobToForm(job) {
 
 	var match = job.jobType == "LOCAL_MATCH" || job.jobType == "RES_MATCH";
 	document.getElementById("classifyreads").checked = match && job.classifyReads;
+	document.getElementById("errorratefield").value = job.errorRate;
 	document.getElementById("crtext").style.display = match ? "block" : "none";
 	document.getElementById("crcheckbox").style.display = match ? "block" : "none";
 
@@ -513,6 +526,8 @@ function enableJobForm(enable) {
 	document.getElementById("jshowdir").disabled = !isJobRunner(loggedInUser);
 	document.getElementById("jobtype").disabled = !enable;
 	document.getElementById("classifyreads").disabled = !enable;
+	var classify = document.getElementById("classifyreads").checked;
+	document.getElementById("errorratefield").disabled = !enable || !classify;
 }
 
 function startJob() {

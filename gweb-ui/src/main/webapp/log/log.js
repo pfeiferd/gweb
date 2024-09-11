@@ -100,6 +100,7 @@ var inMain = true;
 function main() {
 	inMain = true;
 	changeLan(state.currentLan);
+	loadLoggedInUser(); // Ensures default user is in session if existing. 
 	loadJob(jobId);
 	downloadCSV(jobId);
 	inMain = false;
@@ -216,5 +217,17 @@ function loadJob(id) {
 		}
 	};
 	request.open("GET", restPath + "/JobService/get/" + id, true);
+	request.send();
+}
+
+function loadLoggedInUser() {
+	var request = createAjaxRequest();
+	request.onreadystatechange = function() {
+		if (request.readyState == 4) {
+			// Do nothing on purpose.
+		}
+	};
+	// Must be synchronous.
+	request.open("GET", restPath + "/UserService/getLoggedInUser", false);
 	request.send();
 }

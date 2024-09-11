@@ -2,8 +2,12 @@
 <%@page import="org.metagene.gweb.service.dto.DB"%>
 <%@page import="org.metagene.gweb.service.dto.User"%>
 <%@page import="org.metagene.gweb.service.dto.Person"%>
+<%@page import="org.metagene.gweb.Version"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%
+String version = Version.class.getPackage().getImplementationVersion();
+%>
 <!DOCTYPE html>
 <%
 String lan = request.getParameter("lan");
@@ -29,8 +33,8 @@ jobId=<%=jobid%>;
 var mainApp = "<%=request.getContextPath()%>";
 var restPath = "<%=request.getContextPath()%>" + "/rest";
 </script>
-<script src="viewer/viewer.js"></script>
-<link rel="stylesheet" type="text/css" href="ui.css">
+<script src="viewer/viewer.js?v=<%=version%>"></script>
+<link rel="stylesheet" type="text/css" href="ui.css?v=<%=version%>">
 </head>
 <body onload="main()"
 	style="margin: 0px; height: 100vh; display: flex; flex-direction: column; flex-wrap: nowrap;">
@@ -296,6 +300,7 @@ var restPath = "<%=request.getContextPath()%>" + "/rest";
 							<svg id="qpup" style="display: none;" class="featherc sorticon">
 												<use href="feather-sprite.svg#chevron-up" /></svg>
 						</div></th>
+<!-- 						
 					<th class="sortable" onclick="sortTableData('maxcdesc')"><span
 						data-i18n="maxcdesc"></span>
 						<div style="width: 16px; display: inline-block">
@@ -305,7 +310,7 @@ var restPath = "<%=request.getContextPath()%>" + "/rest";
 							<svg id="maxcdescup" style="display: none;"
 								class="featherc sorticon">
 												<use href="feather-sprite.svg#chevron-up" /></svg>
-						</div></th>
+						</div></th>  -->
 				</tr>
 			</thead>
 			<tbody>

@@ -146,6 +146,7 @@ var inMain = true;
 function main() {
 	inMain = true;
 	changeLan(state.currentLan);
+	loadLoggedInUser(); // Ensures default user is in session if existing. 
 	loadJob(jobId);
 	downloadCSV(jobId);
 	inMain = false;
@@ -317,6 +318,18 @@ function handleRequestError(request) {
 	}
 }
 
+function loadLoggedInUser() {
+	var request = createAjaxRequest();
+	request.onreadystatechange = function() {
+		if (request.readyState == 4) {
+			// Do nothing on purpose.
+		}
+	};
+	// Must be synchronous.
+	request.open("GET", restPath + "/UserService/getLoggedInUser", false);
+	request.send();
+}
+
 function loadJob(id) {
 	var request = createAjaxRequest();
 	request.onreadystatechange = function() {
@@ -422,7 +435,7 @@ function updateDataTable() {
 		tr = tr + "<td>" + htmlEscape(line.euk) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.ukeukr) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.qp) + "</td>";
-		tr = tr + "<td>" + htmlEscape(line.maxcdesc) + "</td>";
+/*		tr = tr + "<td>" + htmlEscape(line.maxcdesc) + "</td>"; */
 		tr = tr + "</tr>";
 
 		table.children[1].appendChild(colorTableRow(colorBy, line, filterTableRow(filter, createTableRow(tr)), minmax[0], minmax[1]));

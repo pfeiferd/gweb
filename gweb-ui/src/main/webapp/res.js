@@ -121,7 +121,9 @@ function validateResInForm() {
 	extractResFromForm(res);
 
 	var validU = !updateMandatory("resnamefield", selectedRes != null && res.name == "");
-	var validF = !updateMandatory("resurlfield", selectedRes != null && !isValidHttpUrl(res.url));
+	var validF = !updateMandatory("resurlfield", selectedRes != null && 
+		((res.type == "HTTP_URL" && !isValidHttpUrl(res.url)) || 
+		 (res.type == "FILE_PATH" && (typeof(res.url) != "string" || res.url == ""))));
 	var validUser = !updateMandatory("forresuser", selectedRes != null && res.userId == null);
 
 	return validU && validF && validUser;
@@ -143,7 +145,7 @@ function newRes() {
 	res.id = -1;
 	res.name = "";
 	res.url = "";
-	res.type = "URL";
+	res.type = "HTTP_URL";
 	res.userId = loggedInUser == null ? null : loggedInUser.id;
 
 	return res;
@@ -229,8 +231,10 @@ function extractResFromForm(res) {
 	res.name = document.getElementById("resnamefield").value;
 	res.url = document.getElementById("resurlfield").value;
 
-	options = document.getElementById("forresuser").selectedOptions;
+	var options = document.getElementById("forresuser").selectedOptions;
 	res.userId = options.length == 0 ? null : parseInt(options[0].value);
+	options = document.getElementById("restype").selectedOptions;
+	res.type = options[0].value;
 
 	return res;
 }
@@ -247,10 +251,29 @@ function bindResToForm(res) {
 			break;
 		}
 	}
+	
+	options = document.getElementById("restype").options;
+	for (var i = 0; i < options.length; i++) {
+		if (options[i].value == res.type) {
+			document.getElementById("restype").value = res.type;
+			break;
+		}
+	}
 }
 
 function enableResForm(enable) {
 	document.getElementById("resnamefield").disabled = !enable;
 	document.getElementById("resurlfield").disabled = !enable;
 	document.getElementById("forresuser").disabled = !enable || !isAdmin(loggedInUser);
+	document.getElementById("restype").disabled = !enable;
+	
+	var options = document.getElementById("restype").options;
+	for (var i = 0; i < options.length; i++) {
+		if (options[i].value == "FILE_PATH") {
+			options[i].disabled = filePathRole == null || 
+				(filePathRole == "ADMIN" && !isAdmin(loggedInUser)) || 
+				(filePathRole == "RUN_JOBS" && !isJobRunner());
+			break;
+		}
+	}
 }

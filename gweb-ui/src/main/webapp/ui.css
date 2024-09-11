@@ -93,7 +93,7 @@ button:enabled:hover {
 	background-color: rgba(255, 0, 0, 0.5);
 }
 
-input[type=text], [type=password] {
+input[type=text], [type=password], [type=number] {
 	width: 100%;
 	background-color: #f2f2f2;
 	border: 1px solid #ddd;
@@ -102,7 +102,7 @@ input[type=text], [type=password] {
 	box-sizing: border-box;
 }
 
-input[type=text].mandatory, [type=password].mandatory {
+input[type=text].mandatory, [type=password].mandatory, [type=number].mandatory {
 	width: 100%;
 	background-color: rgba(255, 0, 0, 0.1);
 	border: 1px solid #ddd;
@@ -111,13 +111,13 @@ input[type=text].mandatory, [type=password].mandatory {
 	box-sizing: border-box;
 }
 
-input[type=text]:focus, [type=password]:focus {
+input[type=text]:focus, [type=password]:focus, [type=number]:focus {
 	width: 100%;
 	background-color: #b3daff;
 	outline: 0;
 }
 
-input[type=text]:disabled, [type=password]:disabled {
+input[type=text]:disabled, [type=password]:disabled, [type=number]:disabled {
 	width: 100%;
 	background-color: white;
 }
@@ -218,6 +218,11 @@ select.mandatory {
 .right {
 	position: absolute;
 	right: 0px;
+}
+
+.left {
+	position: absolute;
+	left: 0px;
 }
 
 .content {

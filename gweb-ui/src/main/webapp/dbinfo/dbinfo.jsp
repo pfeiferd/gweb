@@ -2,8 +2,12 @@
 <%@page import="org.metagene.gweb.service.dto.DB"%>
 <%@page import="org.metagene.gweb.service.dto.User"%>
 <%@page import="org.metagene.gweb.service.dto.Person"%>
+<%@page import="org.metagene.gweb.Version"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%
+String version = Version.class.getPackage().getImplementationVersion();
+%>
 <!DOCTYPE html>
 <%
 String lan = request.getParameter("lan");
@@ -29,8 +33,8 @@ dbId=<%=dbid%>;
 var mainApp = "<%=request.getContextPath()%>";
 var restPath = "<%=request.getContextPath()%>" + "/rest";
 </script>
-<script src="dbinfo/dbinfo.js"></script>
-<link rel="stylesheet" type="text/css" href="ui.css">
+<script src="dbinfo/dbinfo.js?v=<%=version%>"></script>
+<link rel="stylesheet" type="text/css" href="ui.css?v=<%=version%>">
 </head>
 <body onload="main()"
 	style="margin: 0px; height: 100vh; display: flex; flex-direction: column; flex-wrap: nowrap;">
