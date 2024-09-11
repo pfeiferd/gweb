@@ -94,12 +94,20 @@
 		<mime-type>text/css;charset=UTF-8</mime-type>
 	</mime-mapping>
 	<mime-mapping>
+		<extension>txt</extension>
+		<mime-type>text/plain;charset=UTF-8</mime-type>
+	</mime-mapping>
+	<mime-mapping>
 		<extension>json</extension>
 		<mime-type>application/json;charset=UTF-8</mime-type>
 	</mime-mapping>
 	<session-config>
-		<session-timeout>-1</session-timeout>
+		<session-timeout>60</session-timeout>
 	</session-config>
+	<context-param>
+		<param-name>filePathRole</param-name>
+		<param-value>ADMIN</param-value>
+	</context-param>
 	<resource-ref>
 		<description>DB Connection</description>
 		<res-ref-name>jdbc/gwebdb</res-ref-name>
