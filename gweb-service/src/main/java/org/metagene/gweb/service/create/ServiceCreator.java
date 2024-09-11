@@ -72,6 +72,7 @@ public abstract class ServiceCreator {
 	public static final String THREADS = "threads";
 	public static final String LOG_PROGRESS = "logProgressUpdateCycle";
 	public static final String INIT_DBS = "initDBs";
+	public static final String FILE_PATH_ROLE = "filePathRole";
 
 	private final boolean localInstall;
 	private final DataSource dataSource;
@@ -236,7 +237,17 @@ public abstract class ServiceCreator {
 		} else if (clazz.equals(FastqFileService.class)) {
 			return (T) new FastqFileRoleService(getBasicService(FastqFileService.class), userStore, localInstall);
 		} else if (clazz.equals(ResourceService.class)) {
-			return (T) new ResourceRoleService(getBasicService(ResourceService.class), userStore);
+			UserRole role = null;
+			try {
+				role = UserRole.valueOf(config.getConfigValue(FILE_PATH_ROLE));
+				if (!role.subsumes(UserRole.RUN_JOBS)) {
+					role = null;
+				}
+			} catch (Exception e) {
+				// Ignore on purpose.
+			}
+
+			return (T) new ResourceRoleService(getBasicService(ResourceService.class), userStore, role);
 		}
 		throw new IllegalArgumentException("Unknown service class " + clazz);
 	}

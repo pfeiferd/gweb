@@ -35,6 +35,7 @@ import java.net.URL;
 import org.metagene.genestrip.DefaultExecutionContext;
 import org.metagene.genestrip.ExecutionContext;
 import org.metagene.genestrip.GSCommon;
+import org.metagene.genestrip.GSConfigKey;
 import org.metagene.genestrip.GSGoalKey;
 import org.metagene.genestrip.GSMaker;
 import org.metagene.genestrip.GSProject;
@@ -202,6 +203,9 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 		}
 
 		private void match(GSProject project, GSMaker maker, GSGoalKey matchKey) {
+			if (job.getErrorRate() >= 0) {
+				project.initConfigParam(GSConfigKey.MAX_READ_TAX_ERROR_COUNT, job.getErrorRate());
+			}
 			fillDBCacheIfRequired(project, maker);
 			goal = maker.getGoal(matchKey);
 			bundle.clearThrowableList();

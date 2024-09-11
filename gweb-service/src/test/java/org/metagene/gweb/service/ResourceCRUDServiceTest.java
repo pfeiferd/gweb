@@ -59,7 +59,7 @@ public class ResourceCRUDServiceTest extends AbstractCRUDServiceTest<ResourceSer
 	protected NetFileResource newDTO() {
 		NetFileResource resource = new NetFileResource();
 		resource.setName(nextString());
-		resource.setType(ResourceType.URL);
+		resource.setType(ResourceType.HTTP_URL);
 		resource.setUserId(userId);
 		resource.setUrl("http://www.tagesschau.de");
 		return resource;

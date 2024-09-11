@@ -26,13 +26,17 @@ package org.metagene.gweb.service.role;
 
 import org.metagene.gweb.service.ResourceService;
 import org.metagene.gweb.service.dto.NetFileResource;
+import org.metagene.gweb.service.dto.NetFileResource.ResourceType;
 import org.metagene.gweb.service.dto.User.UserRole;
 
 public class ResourceRoleService extends CRUDRoleService<ResourceService, NetFileResource> implements ResourceService {
-	public ResourceRoleService(ResourceService delegate, UserStore userStore) {
+	private final UserRole minFilePathUserRole;
+
+	public ResourceRoleService(ResourceService delegate, UserStore userStore, UserRole minFilePathUserRole) {
 		super(delegate, userStore);
+		this.minFilePathUserRole = minFilePathUserRole;
 	}
-	
+
 	@Override
 	public long create(NetFileResource d) {
 		checkJobsAllowed();
@@ -59,9 +63,14 @@ public class ResourceRoleService extends CRUDRoleService<ResourceService, NetFil
 	public void update(NetFileResource d) {
 		checkJobsAllowed();
 		checkIsMyResource(d.getId());
+		if (ResourceType.FILE_PATH.equals(d.getType())) {
+			if (minFilePathUserRole == null || !getLoggedInUserRole().subsumes(minFilePathUserRole)) {
+				throw new MissingRightException("Access right for resource type missing in role.");
+			}
+		}
 		getDelegate().update(d);
 	}
-	
+
 	@Override
 	public NetFileResource[] getByUser(long userId) {
 		checkReadAllowed();

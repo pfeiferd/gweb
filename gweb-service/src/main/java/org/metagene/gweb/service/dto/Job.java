@@ -28,8 +28,8 @@ import java.io.File;
 import java.util.Date;
 
 public class Job extends DTO {
-	public static int NAME_SIZE = 255;
-	public static int FASTQ_FILE_SIZE = 255;
+	public static int NAME_SIZE = 256;
+	public static int FASTQ_FILE_SIZE = 512;
 
 	private static final long serialVersionUID = 1L;
 
@@ -47,7 +47,7 @@ public class Job extends DTO {
 	};
 
 	public enum JobType {
-		LOCAL_MATCH, DB_INFO, RES_MATCH, INSTALL_DB;
+		LOCAL_MATCH, DB_INFO, RES_MATCH, INSTALL_DB, PATH_MATCH;
 
 		private static final JobType[] JOB_TYPE_VALUES = JobType.values();
 
@@ -77,6 +77,7 @@ public class Job extends DTO {
 	private long coveredBytes;
 	
 	private boolean classifyReads;
+	private double errorRate;
 
 	public Job() {
 		jobType = JobType.LOCAL_MATCH;
@@ -230,6 +231,18 @@ public class Job extends DTO {
 	public void setCoveredBytes(long coveredBytes) {
 		this.coveredBytes = coveredBytes;
 	}
+	
+	public double getErrorRate() {
+		return errorRate;
+	}
+	
+	public void setErrorRate(double errorRate) {
+		this.errorRate = errorRate;
+	}
+	
+	public boolean checkErrorRateValid() {
+		return errorRate >= 0;
+	}
 
 	public boolean checkUserIdValid() {
 		return isValidId(userId);
@@ -239,6 +252,6 @@ public class Job extends DTO {
 	public boolean checkValid() {
 		return super.checkValid() && checkNameValid() && checkStatusValid() && checkDbIdValid() && checkUserIdValid()
 				&& checkFastqFileValid() && checkFastqFile2Valid() && checkJobType() && checkResourceIdValid()
-				&& checkResourceId2Valid();
+				&& checkResourceId2Valid() && checkErrorRateValid();
 	}
 }

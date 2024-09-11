@@ -97,7 +97,11 @@ public abstract class RestApplication extends Application {
 			ServiceCreator serviceCreator = createServiceCreator(dataSource, new Config() {
 				@Override
 				public String getConfigValue(String param) {
-					return servletConfig.getInitParameter(param);
+					String s = servletConfig.getInitParameter(param);
+					if (s == null) {
+						s = servletConfig.getServletContext().getInitParameter(param);
+					}
+					return s;
 				}
 			}, new Logger() {
 				@Override

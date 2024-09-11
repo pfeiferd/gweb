@@ -70,7 +70,8 @@ public class InstallJDBCService extends AbstractJDBCService implements InstallSe
 			{ "alter table sysuser add column password binary(32) not null" },
 			{ "alter table job add column classify_reads boolean default false not null" },
 			{ "alter table db add column install_url varchar(" + DB.URL_SIZE + ")" },
-			{ "alter table db add column install_md5 varchar(" + DB.MD5_SIZE + ")" } };
+			{ "alter table db add column install_md5 varchar(" + DB.MD5_SIZE + ")" },
+			{ "alter table job add column error_rate double precision default 0.5 not null" } };
 
 	private final SQLDialect dialect;
 

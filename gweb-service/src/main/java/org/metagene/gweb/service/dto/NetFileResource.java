@@ -24,14 +24,17 @@
  */
 package org.metagene.gweb.service.dto;
 
+import java.io.File;
+import java.nio.file.FileSystems;
+
 public class NetFileResource extends DTO {
 	public static int NAME_SIZE = 256;
-	public static int URL_SIZE = 512;
+	public static int URL_SIZE = 1024;
 
 	private static final long serialVersionUID = 1L;
 
 	public enum ResourceType {
-		URL, GOOGLE_DRIVE, DROPBOX;
+		HTTP_URL, FILE_PATH;
 
 		private static final ResourceType[] RESOURCE_VALUES = ResourceType.values();
 
@@ -84,10 +87,27 @@ public class NetFileResource extends DTO {
 	}
 
 	public boolean checkURLValid() {
-		if (type == ResourceType.URL) {
-			checkURLValid(url);
+		switch (type) {
+		case HTTP_URL:
+			return checkHTTPURLValid(url);
+		case FILE_PATH:
+			return checkGLOBFilePath(url);
+		default:
+			return false;
 		}
-		return true;
+	}
+
+	public boolean checkGLOBFilePath(String s) {
+		try {
+			File parent = new File(s).getParentFile();
+			if (parent != null) {
+				parent.toPath();
+			}
+			FileSystems.getDefault().getPathMatcher("glob:" + s);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	public long getUserId() {

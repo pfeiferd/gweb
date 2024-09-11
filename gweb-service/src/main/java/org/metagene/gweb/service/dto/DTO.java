@@ -66,10 +66,10 @@ public abstract class DTO implements Serializable, Cloneable {
 		return true;
 	}
 
-	public static boolean checkURLValid(String url) {
+	public static boolean checkHTTPURLValid(String url) {
 		try {
-			new URL(url);
-			return true;
+			URL u = new URL(url);
+			return "http".equals(u.getProtocol()) || "https".equals(u.getProtocol());
 		} catch (MalformedURLException e) {
 			return false;
 		}

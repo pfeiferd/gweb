@@ -141,6 +141,7 @@ public class JobJDBCService extends AbstractDTOJDBCService<Job> implements JobSe
 		res.setCoveredBytes(rs.getLong(13));
 		res.setJobType(JobType.indexToValue(rs.getInt(14)));
 		res.setClassifyReads(rs.getBoolean(15));
+		res.setErrorRate(rs.getDouble(16));
 
 		return res;
 	}
@@ -169,8 +170,9 @@ public class JobJDBCService extends AbstractDTOJDBCService<Job> implements JobSe
 		ps.setLong(12, d.getCoveredBytes());
 		ps.setInt(13, d.getJobType().ordinal());
 		ps.setBoolean(14, d.isClassifyReads());
+		ps.setDouble(15, d.getErrorRate());
 
-		return 14;
+		return 15;
 	}
 
 	@Override
@@ -181,7 +183,7 @@ public class JobJDBCService extends AbstractDTOJDBCService<Job> implements JobSe
 		d.setFinished(null);
 		d.setCoveredBytes(0);
 		return create(d,
-				"insert into job(name, fastq_file, fastq_file_2, resource_id, resource_id2, db_id, user_id, status, enqueued, started, finished, covered_bytes, type, classify_reads) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+				"insert into job(name, fastq_file, fastq_file_2, resource_id, resource_id2, db_id, user_id, status, enqueued, started, finished, covered_bytes, type, classify_reads, error_rate) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 	}
 
 	@Override
@@ -229,7 +231,7 @@ public class JobJDBCService extends AbstractDTOJDBCService<Job> implements JobSe
 
 	protected void updateInternal(Job d) {
 		update(d,
-				"update job set name = ?, fastq_file = ?, fastq_file_2 = ?, resource_id = ?, resource_id2 = ?, db_id = ?, user_id = ?, status = ?, enqueued = ?, started = ?, finished = ?, covered_bytes = ?, type = ?, classify_reads = ? where id = ?");
+				"update job set name = ?, fastq_file = ?, fastq_file_2 = ?, resource_id = ?, resource_id2 = ?, db_id = ?, user_id = ?, status = ?, enqueued = ?, started = ?, finished = ?, covered_bytes = ?, type = ?, classify_reads = ?, error_rate = ? where id = ?");
 	}
 
 	@Override
