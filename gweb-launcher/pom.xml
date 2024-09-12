@@ -216,7 +216,7 @@
 									<goal>single</goal>
 								</goals>
 								<configuration>
-									<finalName>${project.parent.name}</finalName>
+									<finalName>${project.parent.name}-${revision}</finalName>
 									<inlineDescriptors>
 										<assembly>
 											<id>windows-x64</id>
