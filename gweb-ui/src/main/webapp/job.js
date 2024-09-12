@@ -244,8 +244,8 @@ function validateJobInForm() {
 	var validU = !updateMandatory("jobnamefield", selectedJob != null && job.name == "");
 	var validF = !updateMandatory("fastqfilesel", selectedJob != null && job.status == null && job.fastqFile == null && isMatchType);
 	var validURL = !updateMandatory("fastqurlsel", selectedJob != null && job.status == null && job.resourceId == -1 && isMatchType);
-	var validD = !updateMandatory("fordb", selectedJob != null && job.dbId == null);
-	var validUser = !updateMandatory("foruser", selectedJob != null && job.userId == null);
+	var validD = !updateMandatory("fordb", selectedJob != null && job.dbId == -1);
+	var validUser = !updateMandatory("foruser", selectedJob != null && job.userId == -1);
 	var validER = !updateMandatory("errorratefield", job.classifyReads && selectedJob != null && isMatchType && !(job.errorRate >= 0));
 
 	return validU && (validF || validURL) && validD && validUser && validER;
@@ -256,6 +256,7 @@ function createJob() {
 	unselectTableRows(table);
 
 	selectedJob = newJob();
+	selectedJob.userId = loggedInUser.id;
 	bindJobToForm(selectedJob);
 
 	checkJobInForm();
@@ -270,8 +271,8 @@ function newJob() {
 	job.fastqFile2 = null;
 	job.resourceId = -1;
 	job.resourceId2 = -1;
-	job.dbId = allData["db"] == null || allData["db"].length == 0 ? null : allData["db"][0].id;
-	job.userId = loggedInUser == null ? null : loggedInUser.id;
+	job.dbId = -1;
+	job.userId = -1; 
 	job.enqueued = null;
 	job.started = null;
 	job.finished = null;
@@ -392,7 +393,7 @@ function extractJobFromForm(job) {
 	}
 
 	var options = document.getElementById("fordb").selectedOptions;
-	job.dbId = options.length == 0 ? null : parseInt(options[0].value);
+	job.dbId = options.length == 0 ? -1 : parseInt(options[0].value);
 
 	job.userId = getJobUserFromForm();
 
@@ -408,22 +409,8 @@ function bindJobToForm(job) {
 	var status = job.status == null ? "NEW" : job.status;
 	document.getElementById("jobstatustext").innerHTML = "<span data-i18n=\"" + status + "\">" + i18n[state.currentLan][status] + "</span>";
 
-	var options = document.getElementById("foruser").options;
-	for (var i = 0; i < options.length; i++) {
-		if (options[i].value == job.userId) {
-			document.getElementById("foruser").value = job.userId;
-			break;
-		}
-	}
-
-	options = document.getElementById("fordb").options;
-	for (var i = 0; i < options.length; i++) {
-		if (options[i].value == job.dbId) {
-			document.getElementById("fordb").value = job.dbId;
-			break;
-		}
-	}
-
+	document.getElementById("foruser").value = job.userId;
+	document.getElementById("fordb").value = job.dbId;
 	document.getElementById("jobtype").value = job.jobType;
 	switchFastqTypeDiv(job.jobType);
 
@@ -521,7 +508,7 @@ function enableJobForm(enable) {
 	document.getElementById("jobnamefield").disabled = !enable;
 	document.getElementById("fastqfilesel").disabled = !enable;
 	document.getElementById("fastqurlsel").disabled = !enable;
-	document.getElementById("foruser").disabled = !enable || !isAdmin(loggedInUser);
+	document.getElementById("foruser").disabled = !enable;
 	document.getElementById("fordb").disabled = !enable;
 	document.getElementById("jshowdir").disabled = !isJobRunner(loggedInUser);
 	document.getElementById("jobtype").disabled = !enable;
@@ -609,9 +596,6 @@ function checkPendingJobs() {
 }
 
 function jobUserChanged() {
-	var options = document.getElementById("foruser").selectedOptions;
-	var userId = options.length == 0 ? "" : options[0].value;
-	selectedJob.userId = userId == "" ? null : parseInt(userId);
 	document.getElementById("jfiles").value = "";
 	selectedJob.fastqFile = null;
 	selectedJob.fastqFile2 = null;
@@ -624,7 +608,7 @@ function jobUserChanged() {
 
 function getJobUserFromForm() {
 	var options = document.getElementById("foruser").selectedOptions;
-	return options.length == 0 ? null : parseInt(options[0].value);
+	return options.length == 0 ? -1 : parseInt(options[0].value);
 }
 
 function fastqSelectionChanged() {
@@ -765,7 +749,7 @@ function loadFastqFileList(userId, sync) {
 		cachedFileSel2 = null;
 		cachedUserId = userId;
 	}
-	if (userId == null) {
+	if (userId == -1) {
 		clearFastqs();
 		return;
 	}

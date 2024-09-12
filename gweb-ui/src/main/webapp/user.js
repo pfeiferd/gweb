@@ -88,6 +88,7 @@ function updateUserOption(optionId) {
 		opt.innerHTML = user.id + ": " + htmlEscape(user.login);
 		select.appendChild(opt);
 	}
+	select.value = -1;
 }
 
 function selectUser(i) {
@@ -141,8 +142,9 @@ function validateUserInForm() {
 
 	var validU = !updateMandatory("usernamefield", selectedUser != null && user.login == "");
 	var validF = !updateMandatory("passwordfield", selectedUser != null && user.id == -1 && (user.password == null || user.password == ""));
+	var validP = !updateMandatory("forperson", selectedUser != null && user.personId == -1);
 
-	return validU && validF;
+	return validU && validF && validP;
 }
 
 function createUser() {
@@ -162,7 +164,7 @@ function newUser() {
 	user.login = "";
 	user.password = null;
 	user.role = "NO_LOGIN";
-	user.personId = allData["person"] == null || allData["person"].length == 0 ? null : allData["person"][0].id;
+	user.personId = -1;
 
 	return user;
 }
@@ -257,8 +259,7 @@ function extractUserFromForm(user) {
 	user.role = roleoptions.length == 0 ? "NONE" : roleoptions[0].value;
 
 	var options = document.getElementById("forperson").selectedOptions;
-	var personId = options.length == 0 ? null : options[0].value;
-	user.personId = personId == "" ? null : parseInt(personId);
+	user.personId = options.length == 0 ? -1 : parseInt(options[0].value);
 
 	return user;
 }
@@ -269,6 +270,8 @@ function bindUserToForm(user) {
 	document.getElementById("passwordfield").value = user.password;
 	document.getElementById("selectrole").value = user.role;
 
+	document.getElementById("forperson").value = user.personId;
+	/*
 	var options = document.getElementById("forperson").options;
 	for (var i = 0; i < options.length; i++) {
 		if (options[i].value == user.personId) {
@@ -276,6 +279,7 @@ function bindUserToForm(user) {
 			break;
 		}
 	}
+	*/
 }
 
 function enableUserForm(enable) {

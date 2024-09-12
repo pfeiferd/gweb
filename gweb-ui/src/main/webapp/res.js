@@ -124,7 +124,7 @@ function validateResInForm() {
 	var validF = !updateMandatory("resurlfield", selectedRes != null && 
 		((res.type == "HTTP_URL" && !isValidHttpUrl(res.url)) || 
 		 (res.type == "FILE_PATH" && (typeof(res.url) != "string" || res.url == ""))));
-	var validUser = !updateMandatory("forresuser", selectedRes != null && res.userId == null);
+	var validUser = !updateMandatory("forresuser", selectedRes != null && res.userId == -1);
 
 	return validU && validF && validUser;
 }
@@ -134,6 +134,7 @@ function createRes() {
 	unselectTableRows(table);
 
 	selectedRes = newRes();
+	selectedRes.userId = loggedInUser.id;
 	bindResToForm(selectedRes);
 
 	checkResInForm();
@@ -146,7 +147,7 @@ function newRes() {
 	res.name = "";
 	res.url = "";
 	res.type = "HTTP_URL";
-	res.userId = loggedInUser == null ? null : loggedInUser.id;
+	res.userId = -1;
 
 	return res;
 }
@@ -232,7 +233,7 @@ function extractResFromForm(res) {
 	res.url = document.getElementById("resurlfield").value;
 
 	var options = document.getElementById("forresuser").selectedOptions;
-	res.userId = options.length == 0 ? null : parseInt(options[0].value);
+	res.userId = options.length == 0 ? -1 : parseInt(options[0].value);
 	options = document.getElementById("restype").selectedOptions;
 	res.type = options[0].value;
 
@@ -264,7 +265,7 @@ function bindResToForm(res) {
 function enableResForm(enable) {
 	document.getElementById("resnamefield").disabled = !enable;
 	document.getElementById("resurlfield").disabled = !enable;
-	document.getElementById("forresuser").disabled = !enable || !isAdmin(loggedInUser);
+	document.getElementById("forresuser").disabled = !enable;
 	document.getElementById("restype").disabled = !enable;
 	
 	var options = document.getElementById("restype").options;

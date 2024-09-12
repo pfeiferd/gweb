@@ -374,7 +374,7 @@ String version = Version.class.getPackage().getImplementationVersion();
 							</tr>
 							<tr>
 								<td align="right"><span data-i18n="restype"></span></td>
-								<td><select id="restype">
+								<td><select id="restype" oninput="checkResInForm()">
 										<option id="HTTP_URL" value="HTTP_URL"></option>
 										<option id="FILE_PATH" value="FILE_PATH" disabled></option>
 								</select></td>

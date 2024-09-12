@@ -59,7 +59,7 @@ function updateDBTable() {
 
 function updateForDB() {
 	var select = document.getElementById("fordb");
-	var v = "";
+	var v = -1;
 	if (select.selectedOptions.length == 1) {
 		v = select.selectedOptions[0].value;
 	}

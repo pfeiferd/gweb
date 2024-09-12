@@ -87,6 +87,7 @@ function updatePersonTable() {
 		opt.innerHTML = person.id + ": " + htmlEscape(person.firstName) + " " + htmlEscape(person.lastName);
 		select.appendChild(opt);
 	}
+	select.value = -1;
 }
 
 function selectPerson(i) {
