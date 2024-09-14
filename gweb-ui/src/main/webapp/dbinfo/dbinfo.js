@@ -42,7 +42,7 @@ var i18n = {
 		rank: "Rang",
 		name: "Name",
 		taxid: "Tax Id",
-		kmers: "Gesspeichert k-Mere",
+		kmers: "Gespeicherte k-Mere",
 		ok: "OK",
 		nosession: "Ihre Sitzung wurde beendet. Bitte melden Sie sich bei der Hauptanwendung an.",
 		novaliddb: "Ungültige oder fehlende DB ID. Keine Daten verfügbar.",
