@@ -70,9 +70,10 @@ public abstract class ServiceCreator {
 	public static final String GENESTRIP_BASE_DIR = "genestripBaseDir";
 	public static final String SQL_DIALECT = "sqlDialect";
 	public static final String THREADS = "threads";
-	public static final String LOG_PROGRESS = "logProgressUpdateCycle";
 	public static final String INIT_DBS = "initDBs";
 	public static final String FILE_PATH_ROLE = "filePathRole";
+	// Has not impact yet, therefore not document. (Impact only on log level trace, but GWeb uses log level info)
+	public static final String LOG_PROGRESS = "logProgressUpdateCycle";
 
 	private final boolean localInstall;
 	private final DataSource dataSource;
@@ -87,7 +88,7 @@ public abstract class ServiceCreator {
 		this.logger = logger;
 		this.basicServices = new HashMap<Class<?>, Object>();
 
-		createGSConfig(new File(config.getConfigValue(GENESTRIP_BASE_DIR, ".")));
+		createGSConfig(new File(config.getConfigValue(GENESTRIP_BASE_DIR, "./data")));
 		createBasicServices();
 	}
 

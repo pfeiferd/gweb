@@ -77,7 +77,7 @@ public class GenestripServiceCreator extends ServiceCreator {
 	@Override
 	protected Factory createsJobExecutableFactory() {
 		int threads = Integer.parseInt(getConfig().getConfigValue(THREADS, -1));
-		long logProgress = Integer.parseInt(getConfig().getConfigValue(LOG_PROGRESS, 10000));
+		long logProgress = Long.parseLong(getConfig().getConfigValue(LOG_PROGRESS, 1000000));
 		return new GenestripJobExecutableFactory(gsCommon, threads, logProgress);
 	}
 }
