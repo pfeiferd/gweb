@@ -117,9 +117,13 @@ GWeb (re-)uses worker threads for executing Jobs on the server-side. It queues j
 [Genestrip is used as a library](https://github.com/pfeiferd/genestrip/blob/master/README.md#api-based-usage) and invoked in-process. (This implies that your Web server may require a lot of heap but also CPU time during analysis.)
 The number of worker threads is [configurable](#configuration).
 
-On the client-side GWeb is based on HTML 5, CSS and JavaScript without additional JavaScript libraries.
+Heap consumption is mainly determined by the 
+[size of the Genestrip database](https://github.com/pfeiferd/genestrip-db/blob/main/README.md#the-databases), 
+as the database must be loaded into memory for a corresponding analysis job. To save heap space, only one Genestrip database (the one for the current job) is kept in memory at a time.
+
+On the client-side, GWeb is based on HTML 5, CSS and JavaScript without additional JavaScript libraries.
 The GUI is a thin client without page switches. Data exchange with the server works entirely via [REST](https://en.wikipedia.org/wiki/REST).
-The GUI was tested for compatibility on several modern Web browsers.
+The GUI was tested for compatibility on several modern Web browsers. 
 
 ### Location of application data
 
