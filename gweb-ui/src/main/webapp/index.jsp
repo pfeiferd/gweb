@@ -197,8 +197,8 @@ String version = Version.class.getPackage().getImplementationVersion();
 							<tr>
 								<td align="right"><span data-i18n="jobtype"></span></td>
 								<td><select id="jobtype" oninput="jobTypeChanged()">
-										<option id="UPLOAD_MATCH" value="UPLOAD_MATCH"></option>
 										<option id="LOCAL_MATCH" value="LOCAL_MATCH"></option>
+										<option id="UPLOAD_MATCH" value="UPLOAD_MATCH" disabled></option>
 										<option id="RES_MATCH" value="RES_MATCH"></option>
 										<option id="DB_INFO" value="DB_INFO" disabled></option>
 										<option id="INSTALL_DB" value="INSTALL_DB" disabled></option>
