@@ -81,6 +81,10 @@
 		<servlet-name>Log</servlet-name>
 		<url-pattern>/log</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>FastqUpload</servlet-name>
+		<url-pattern>/fastqupload</url-pattern>
+	</servlet-mapping>
 	<mime-mapping>
 		<extension>html</extension>
 		<mime-type>text/html;charset=UTF-8</mime-type>
@@ -110,7 +114,7 @@
 	</context-param>
 	<context-param>
 		<param-name>uploadPathRole</param-name>
-		<param-value>RUN_JOBS</param-value>
+		<param-value>ADMIN</param-value>
 	</context-param>
 	<context-param>
 		<param-name>localInstall</param-name>
