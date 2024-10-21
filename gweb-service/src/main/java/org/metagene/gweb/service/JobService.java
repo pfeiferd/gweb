@@ -49,7 +49,7 @@ public interface JobService extends CRUDService<Job> {
 
 	default void assertTypeForJob(Job job, JobType... types) {
 		for (JobType type : types) {
-			if (!type.equals(job.getJobType())) {
+			if (type.equals(job.getJobType())) {
 				return;
 			}
 		}
@@ -71,6 +71,8 @@ public interface JobService extends CRUDService<Job> {
 
 	public JobStatus[] getStatusForJobs(long[] jobIds);
 
+	public long[] getActiveJobIds();
+	
 	public long[] getJobIdsByStatus(JobStatus status);
 	
 	public boolean isLogExists(long jobId);

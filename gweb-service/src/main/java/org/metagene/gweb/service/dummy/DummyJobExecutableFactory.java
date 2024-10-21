@@ -35,6 +35,11 @@ public class DummyJobExecutableFactory implements JobExecutable.Factory {
 	public JobExecutable createExecutable(Job job, DB db, ResourceService resourceService) {
 		return new DummyJobExecutable(job, db);
 	}
+	
+	@Override
+	public Object getJobStartSyncObject() {
+		return this;
+	}
 
 	public class DummyJobExecutable implements JobExecutable {
 		private final Job job;

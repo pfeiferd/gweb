@@ -129,6 +129,12 @@ public class JobRoleService extends CRUDRoleService<JobService, Job> implements 
 			}
 		}
 	}
+	
+	@Override
+	public long[] getActiveJobIds() {
+		checkReadAllowed();
+		return filterIdsByUser(getDelegate().getActiveJobIds());
+	}
 
 	@Override
 	public long[] getJobIdsByStatus(JobStatus status) {

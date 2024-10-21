@@ -273,7 +273,7 @@ function enableResForm(enable) {
 		if (options[i].value == "FILE_PATH") {
 			options[i].disabled = filePathRole == null || 
 				(filePathRole == "ADMIN" && !isAdmin(loggedInUser)) || 
-				(filePathRole == "RUN_JOBS" && !isJobRunner());
+				(filePathRole == "RUN_JOBS" && !isJobRunner(loggedInUser));
 			break;
 		}
 	}

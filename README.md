@@ -87,27 +87,31 @@ The system configuration allows for defining a default user who is logged in be 
 the (initial) default user `admin` with password `admin` has the [role "Admin"](#user-roles). 
 You may always logout the default user, which allows you to login as a different user.
 
-### Supplying fastq files and Genestrip databases
+### Supplying fastq files
 
-There are three ways to supply a job with fastq files:
-* Via a URL added in the tab "FastQ URLs": The URL must point to a respective fastq file (with public access). 
-The file will be [streamed for analysis and will not be stored](https://github.com/pfeiferd/genestrip/blob/master/README.md#reading-streaming-and-downloading-fastq-files) by GWeb.
-* Via a local folder on the server-side: This option is particularly useful under the [local variant of GWeb](#local-variant). 
+There are four ways to supply a job with fastq files:
+1. Via a URL added in the tab "Fastq Sources": The URL must point to a respective fastq file (with public access). 
+The file will be [streamed for analysis and will not be stored on server](https://github.com/pfeiferd/genestrip/blob/master/README.md#reading-streaming-and-downloading-fastq-files).
+2. Via a local folder on the server-side: This option is particularly useful under the [local variant of GWeb](#local-variant). 
 The location of the folder is user-specific and can be displayed with a respective UI button in the job details.
 Once a fastq file is placed inside the folder, GWeb will detect it and offer it in the UI for selection in the job details.
-* [When configured accordingly](#configuration), users under the [roles "Admin" or "Job Executor"](#user-roles) may set server-side paths to fastq files in the "Resource" tab. This option supports [glob patterns in paths described here](https://github.com/pfeiferd/genestrip/blob/master/README.md#usage-and-goals).
+3. [When configured accordingly](#configuration), users under the [roles "Admin" or "Job Executor"](#user-roles) may set server-side paths to fastq files in the 
+tab "Fastq Sources". This option supports [glob patterns for file names of paths as described here](https://github.com/pfeiferd/genestrip/blob/master/README.md#usage-and-goals).
 All fastq files matching the path pattern will be jointly analyzed. Obviously, 
 this requires fastq files to present in respective locations on the server-side. This option is particularly useful under the [local variant of GWeb](#local-variant).
+4. [When configured accordingly](#configuration), users under the [roles "Admin" or "Job Executor"](#user-roles) may upload of an arbitrary number of fastq files per job from the client-side. 
+The files will be [streamed for analysis and will not be stored on the server](https://github.com/pfeiferd/genestrip/blob/master/README.md#reading-streaming-and-downloading-fastq-files).
+This option is only enabled when no other jobs are pending or being processed on the server-side. 
+*The browser tab, where the upload job was started, must remain 
+open until the respective job has finished, because otherwise, the upload request supplying the data stream will be closed by the browser itself.*
 
-Two entries for fastq files may be added per job at max. All matching fastq files will be jointly analyzed during that job.
-
-GWeb does not offer an upload of fastq files from the client-side (yet) - mainly to avoid high disk storage consumption on the server. 
+Regarding options 1 to 3, two entries for fastq files may be added per job at max. All matching fastq files will be jointly analyzed during that job.
 
 ## Technical documentation
 
 ### Basic architecture
 
-GWeb is light weight and uses no frameworks. On the server-side, it is based on the following Java-related technologies:
+GWeb is light-weight and uses no frameworks. On the server-side, it is based on the following Java-related technologies:
 * Servlets and JSP (based on the [Jakarta Servlet](https://github.com/jakartaee/servlet) API),
 * JDBC (using SQL-statements compatible with Postgres and HSQL),
 * JAX-RS (using the [Jersey reference implementation](https://de.wikipedia.org/wiki/Eclipse_Jersey) as a pure library),
@@ -117,13 +121,9 @@ GWeb (re-)uses worker threads for executing Jobs on the server-side. It queues j
 [Genestrip is used as a library](https://github.com/pfeiferd/genestrip/blob/master/README.md#api-based-usage) and invoked in-process. (This implies that your Web server may require a lot of heap but also CPU time during analysis.)
 The number of worker threads is [configurable](#configuration).
 
-Heap consumption is mainly determined by the 
-[size of the Genestrip database](https://github.com/pfeiferd/genestrip-db/blob/main/README.md#the-databases), 
-as the database must be loaded into memory for a corresponding analysis job. To save heap space, only one Genestrip database (the one for the current job) is kept in memory at a time.
-
-On the client-side, GWeb is based on HTML 5, CSS and JavaScript without additional JavaScript libraries.
-The GUI is a thin client without page switches. Data exchange with the server works entirely via [REST](https://en.wikipedia.org/wiki/REST).
-The GUI was tested for compatibility on several modern Web browsers. 
+On the client-side GWeb is based on HTML 5, CSS and JavaScript without additional JavaScript libraries.
+The GUI is a thin client without page reloads. Data exchange with the server works almost entirely via [REST](https://en.wikipedia.org/wiki/REST).
+The GUI was tested for compatibility on several modern Web browsers.
 
 ### Location of application data
 
@@ -142,7 +142,7 @@ For the local variant of GWeb the HSQL database files are [also under the folder
 ### Configuration
 
 The configuration of the Web server variant must all be done in [`./gweb-ui/src/main/webapp/WEB-INF/web.xml`](https://github.com/pfeiferd/gweb/blob/master/gweb-ui/src/main/webapp/WEB-INF/web.xml) via
-`init-param` settings (for the Servlet `...GenestripRestApplication`) and one `context-param` setting. 
+`init-param` settings (for the Servlet `...GenestripRestApplication`) and some `context-param` settings. 
 The [shipped `web.xml`](https://github.com/pfeiferd/gweb/blob/master/gweb-ui/src/main/webapp/WEB-INF/web.xml) shows where to place these settings accordingly. 
 
 The local variant of GWeb can be configured in [`./gweb-local/src/main/webapp/WEB-INF/web.xml`](https://github.com/pfeiferd/gweb/blob/master/gweb-local/src/main/webapp/WEB-INF/web.xml) but that is rarely necessary.
@@ -153,7 +153,7 @@ The following table describes the settings.
 
 | Name        | Category | Type | Default Value | Description |
 | ----------- | -------- | ---- | ------------- | ----------- |
-| `localInstall` | `init-param` | `boolean` | `false` | Whether a user not in an ["Admin" role](#user-roles) may see the server-side path to their fastq file folder. This should only be allowed set to true for [local variant of GWeb](#local-variant) |
+| `localInstall` | `context-param` | `boolean` | `false` | Whether users not in an ["Admin" role](#user-roles) may see the server-side path to their fastq file folder. This should only be set to true for the [local variant of GWeb](#local-variant) |
 | `defaultUser` | `init-param` | `String` | `null` | Login name of the [default user](default-user) that is automatically logged in when accessing the GWeb UI. The user must have a database entry for this to work. If not set, the default user functionality is off. | 
 | `initDefaultUser` | `init-param` | `boolean` | `true` | Whether the [default user](default-user) should automatically be created with the [role "Job Viewer"](#user-roles) during Servlet initialization. If the default user already exists, it will neither be created nor changed. | 
 | `jobDelay` | `init-param` | long | 1000 | Time in ms to check the job queue for the execution of the next job (when idle). |
@@ -163,4 +163,5 @@ The following table describes the settings.
 | `sqlDialect` | `init-param` | `String` | `POSTGRES` | Only `HSQL` and `POSTGRES` are valid values and must match the connected database system type. | 
 | `threads` | `init-param` | `integer` | `-1` | The number of [consumer threads of Genestrip](https://github.com/pfeiferd/genestrip/blob/master/ConfigParams.md) used during analysis of fastq files. | 
 | `initDBs` | `init-param` | `boolean` | `true` | Whether to create a set of URL entries for Genestrip databases as given by [Genestrip DB](https://github.com/pfeiferd/genestrip-db). The entries will be added as part of the initial database schema creation only. (Installation must still be done manually by clicking a respective UI button.) |
-| `filePathRole` | `context-param` | String | `null` | The minimum [role](#user-roles) in which a user can set [server-side paths to fastq files in the UI's "Resource" tab](#supplying-fastq-files-and-genestrip-databases). Possible values are `ADMIN` and `RUN_JOBS`. If not set, the corresponding feature is disabled. |
+| `filePathRole` | `context-param` | String | `null` | The minimum [role](#user-roles) in which a user can set [server-side paths to fastq files in the UI's "Fastq Sources" tab](#supplying-fastq-files-and-genestrip-databases). Possible values are `ADMIN` and `RUN_JOBS`. If not set, the corresponding feature is disabled. |
+| `uploadPathRole` | `context-param` | String | `null` | The minimum [role](#user-roles) in which a user can [upload to fastq files in the UI's "Jobs" tab](#supplying-fastq-files-and-genestrip-databases). Possible values are `ADMIN` and `RUN_JOBS`. If not set, the corresponding feature is disabled. |

@@ -48,10 +48,6 @@
 			<param-name>genestripBaseDir</param-name>
 			<param-value>../data</param-value>
 		</init-param>
-		<init-param>
-			<param-name>localInstall</param-name>
-			<param-value>true</param-value>
-		</init-param>
 	</servlet>
 	<servlet>
 		<servlet-name>Viewer</servlet-name>
@@ -107,6 +103,10 @@
 	<context-param>
 		<param-name>filePathRole</param-name>
 		<param-value>ADMIN</param-value>
+	</context-param>
+	<context-param>
+		<param-name>localInstall</param-name>
+		<param-value>true</param-value>
 	</context-param>
 	<resource-ref>
 		<description>DB Connection</description>

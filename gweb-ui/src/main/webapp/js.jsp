@@ -25,17 +25,30 @@ try {
 } catch (Exception e) {
 	// Ignore on purpose.
 }
+UserRole role2 = null;
+try {
+	String v = config.getServletContext().getInitParameter(ServiceCreator.UPLOAD_PATH_ROLE);
+	role2 = UserRole.valueOf(v);
+	if (!role2.subsumes(UserRole.RUN_JOBS)) {
+		role2 = null;
+	}
+} catch (Exception e) {
+	// Ignore on purpose.
+}
+boolean localInstall = Boolean.valueOf(config.getServletContext().getInitParameter(ServiceCreator.LOCAL_INSTALL));
 %>
 <script type="text/javascript">
-var state = {};
+const state = {};
 state.currentLan = "<%=lan%>";
 state.currentTab = "<%=tab%>";
 
-var mainPath = "<%=request.getContextPath()%>";
-var restPath = mainPath + "/rest";
+const mainPath = "<%=request.getContextPath()%>";
+const restPath = mainPath + "/rest";
 
-var errorRateDefault = <%=GSConfigKey.MAX_READ_TAX_ERROR_COUNT.getInfo().defaultValue()%>;
-var filePathRole = <%=role == null ? "null" : "\"" + role + "\""%>;
+const errorRateDefault = <%=GSConfigKey.MAX_READ_TAX_ERROR_COUNT.getInfo().defaultValue()%>;
+const filePathRole = <%=role == null ? "null" : "\"" + role + "\""%>;
+const uploadPathRole = <%=role2 == null ? "null" : "\"" + role2 + "\""%>;
+const localInstall = <%=localInstall%>;
 </script>
 <script src="ui.js?v=<%=version%>"></script>
 <script src="login.js?v=<%=version%>"></script>

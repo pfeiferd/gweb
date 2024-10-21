@@ -253,14 +253,24 @@ public class JobJDBCService extends AbstractDTOJDBCService<Job> implements JobSe
 	}
 
 	@Override
+	public long[] getActiveJobIds() {
+		return getJobIdsByStatus(null);
+	}
+
+	@Override
 	public long[] getJobIdsByStatus(JobStatus status) {
 		Connection c = null;
 		try {
 			c = getConnection();
+			String statusClause = status == null
+					? "status = " + JobStatus.ENQUEUED.ordinal() + " or status = " + JobStatus.STARTED.ordinal()
+					: "status = ?";
 
-			PreparedStatement ps = c
-					.prepareStatement("select id from job where status = ? " + getOrderByStatus(status));
-			ps.setInt(1, status.ordinal());
+			PreparedStatement ps = c.prepareStatement("select id, type <> " + JobType.UPLOAD_MATCH.ordinal()
+					+ " as now from job where " + statusClause + " " + getOrderByStatus(status));
+			if (status != null) {
+				ps.setInt(1, status.ordinal());
+			}
 			ResultSet rs = ps.executeQuery();
 			List<Long> l = new ArrayList<Long>();
 			while (rs.next()) {
@@ -275,15 +285,18 @@ public class JobJDBCService extends AbstractDTOJDBCService<Job> implements JobSe
 	}
 
 	protected String getOrderByStatus(JobStatus status) {
+		if (status == null) {
+			return "order by now, enqueued, started";
+		}
 		switch (status) {
 		case E_CANCELED:
 		case S_CANCELED:
 		case FINISHED:
-			return "order by finished";
+			return "order by now, jobfinished";
 		case ENQUEUED:
-			return "order by enqueued";
+			return "order by now, enqueued";
 		case STARTED:
-			return "order by started";
+			return "order by now, started";
 		default:
 			return "";
 		}

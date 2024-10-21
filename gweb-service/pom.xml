@@ -54,7 +54,7 @@
 		<dependency>
 			<groupId>org.genestrip</groupId>
 			<artifactId>genestrip</artifactId>
-			<version>1.4.2</version>
+			<version>1.4.3</version>
 		</dependency>
 	</dependencies>
 	<build>

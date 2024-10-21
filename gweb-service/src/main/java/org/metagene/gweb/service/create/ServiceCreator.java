@@ -72,6 +72,7 @@ public abstract class ServiceCreator {
 	public static final String THREADS = "threads";
 	public static final String INIT_DBS = "initDBs";
 	public static final String FILE_PATH_ROLE = "filePathRole";
+	public static final String UPLOAD_PATH_ROLE = "uploadPathRole";
 	// Has not impact yet, therefore not document. (Impact only on log level trace, but GWeb uses log level info)
 	public static final String LOG_PROGRESS = "logProgressUpdateCycle";
 
@@ -255,6 +256,7 @@ public abstract class ServiceCreator {
 
 	public interface Config {
 		public String getConfigValue(String param);
+		public Object getConfigAttribute(String param);
 
 		default public String getConfigValue(String param, Object defaultValue) {
 			String v = getConfigValue(param);

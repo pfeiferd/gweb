@@ -52,8 +52,8 @@ public abstract class JobComputeService implements JobService {
 
 	private JobExecutable currentExecutable;
 
-	public JobComputeService(JobService delegate, DBService dbService,
-			ResourceService resourceService, long delay, long period, JobExecutable.Factory executableFactory) {
+	public JobComputeService(JobService delegate, DBService dbService, ResourceService resourceService, long delay,
+			long period, JobExecutable.Factory executableFactory) {
 		this.delegate = delegate;
 		this.dbService = dbService;
 		timer = new Timer();
@@ -70,12 +70,19 @@ public abstract class JobComputeService implements JobService {
 							synchronized (timer) {
 								pendingJobs = delegate.getJobIdsByStatus(JobStatus.ENQUEUED);
 								if (pendingJobs.length > 0) {
-									currentJob = delegate.get(pendingJobs[0]);
-									currentJob.setStarted(new Date());
-									currentJob.setStatus(JobStatus.STARTED);
-									delegate.update(currentJob);
-									DB db = dbService.get(currentJob.getDbId());
-									currentExecutable = executableFactory.createExecutable(currentJob, db, resourceService);
+									Object sync = executableFactory.getJobStartSyncObject();
+									if (sync == null) {
+										sync = new Object(); // Just a placeholder...
+									}
+									synchronized (sync) {
+										currentJob = delegate.get(pendingJobs[0]);
+										currentJob.setStarted(new Date());
+										currentJob.setStatus(JobStatus.STARTED);
+										delegate.update(currentJob);
+										DB db = dbService.get(currentJob.getDbId());
+										currentExecutable = executableFactory.createExecutable(currentJob, db,
+												resourceService);
+									}
 								}
 							}
 							if (currentExecutable != null) {
@@ -108,13 +115,18 @@ public abstract class JobComputeService implements JobService {
 	}
 
 	@Override
+	public long[] getActiveJobIds() {
+		return delegate.getActiveJobIds();
+	}
+	
+	@Override
 	public long[] getJobIdsByStatus(JobStatus status) {
 		return delegate.getJobIdsByStatus(status);
 	}
 
 	@Override
 	public long create(Job d) {
-		assertTypeForJob(d, JobType.LOCAL_MATCH, JobType.RES_MATCH);
+		assertTypeForJob(d, JobType.LOCAL_MATCH, JobType.RES_MATCH, JobType.UPLOAD_MATCH);
 		return delegate.create(d);
 	}
 
@@ -148,7 +160,7 @@ public abstract class JobComputeService implements JobService {
 	@Override
 	public void update(Job d) {
 		assertStatusForJob(d, JobStatus.CREATED);
-		assertTypeForJob(d, JobType.LOCAL_MATCH, JobType.RES_MATCH);
+		assertTypeForJob(d, JobType.LOCAL_MATCH, JobType.RES_MATCH, JobType.UPLOAD_MATCH);
 		delegate.update(d);
 	}
 
@@ -156,7 +168,7 @@ public abstract class JobComputeService implements JobService {
 	public JobStatus enqueue(long jobId) {
 		return delegate.enqueue(jobId);
 	}
-	
+
 	@Override
 	public long enqueueDBInfo(long dbId, long userId) {
 		Job dbInfoJob = new Job();
@@ -166,7 +178,7 @@ public abstract class JobComputeService implements JobService {
 		dbInfoJob.setName("dbinfo");
 		long id = delegate.create(dbInfoJob);
 		dbInfoJob.setId(id);
-		
+
 		JobStatus status = enqueue(id);
 		if (JobStatus.ENQUEUED.equals(status)) {
 			return id;
@@ -183,7 +195,7 @@ public abstract class JobComputeService implements JobService {
 		dbInfoJob.setName("dbinstall");
 		long id = delegate.create(dbInfoJob);
 		dbInfoJob.setId(id);
-		
+
 		JobStatus status = enqueue(id);
 		if (JobStatus.ENQUEUED.equals(status)) {
 			return id;
@@ -234,7 +246,7 @@ public abstract class JobComputeService implements JobService {
 	public boolean isLogExists(long jobId) {
 		return getLogFile(jobId) != null;
 	}
-	
+
 	@Override
 	public File getCSVFile(long jobId) {
 		Job job = get(jobId);
@@ -282,7 +294,8 @@ public abstract class JobComputeService implements JobService {
 		}
 		return null;
 	}
-	
+
 	protected abstract File getLogBaseDir(String projectName);
+
 	protected abstract File getCSVBaseDir(String projectName);
 }

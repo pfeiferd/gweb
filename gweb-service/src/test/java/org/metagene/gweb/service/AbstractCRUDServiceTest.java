@@ -81,6 +81,11 @@ public abstract class AbstractCRUDServiceTest<S extends CRUDService<D>, D extend
 					return null;
 				}
 			}
+			
+			@Override
+			public Object getConfigAttribute(String param) {
+				return null;
+			}
 		}, new Logger() {
 			@Override
 			public void log(String message) {

@@ -44,13 +44,11 @@ public class FastqFileRoleService extends RoleService<FastqFileService> implemen
 
 	@Override
 	public String getFastqFolderForUser(long userId) {
-		checkJobsAllowed();
-		checkAccessForUser(userId);
 		if (getLoggedInUserRole().subsumes(UserRole.ADMIN) || localInstall) {
 			return getDelegate().getFastqFolderForUser(userId);
 		}
 		else {
-			return null;
+			throw new MissingRightException("Read access right missing.");
 		}
 	}
 

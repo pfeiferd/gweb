@@ -197,6 +197,7 @@ String version = Version.class.getPackage().getImplementationVersion();
 							<tr>
 								<td align="right"><span data-i18n="jobtype"></span></td>
 								<td><select id="jobtype" oninput="jobTypeChanged()">
+										<option id="UPLOAD_MATCH" value="UPLOAD_MATCH"></option>
 										<option id="LOCAL_MATCH" value="LOCAL_MATCH"></option>
 										<option id="RES_MATCH" value="RES_MATCH"></option>
 										<option id="DB_INFO" value="DB_INFO" disabled></option>
@@ -211,9 +212,11 @@ String version = Version.class.getPackage().getImplementationVersion();
 									</div></td>
 								<td><div id="crcheckbox">
 										<input type="checkbox" id="classifyreads"
-											oninput="checkJobInForm()">
-									<span data-i18n="errorrate"></span> <input type="number" min="0" step="0.01" id="errorratefield" style="width:200px;"
-									oninput="checkJobInForm()" maxlength="20"></div></td>
+											oninput="checkJobInForm()"> <span
+											data-i18n="errorrate"></span> <input type="number" min="0"
+											step="0.01" id="errorratefield" style="width: 200px;"
+											oninput="checkJobInForm()" maxlength="20">
+									</div></td>
 								<td align="right"><span data-i18n="jstarted"></span></td>
 								<td id="jstarted"></td>
 							</tr>
@@ -223,6 +226,9 @@ String version = Version.class.getPackage().getImplementationVersion();
 									</div>
 									<div id="urlsdivtext">
 										<span data-i18n="fastqurlf"></span>
+									</div>
+									<div id="uploaddivtext">
+										<span data-i18n="fastquploadf"></span>
 									</div></td>
 								<td rowspan="4"><div id="filesdiv">
 										<select id="fastqfilesel" oninput="fastqSelectionChanged()"
@@ -231,6 +237,25 @@ String version = Version.class.getPackage().getImplementationVersion();
 									<div id="urlsdiv">
 										<select id="fastqurlsel" oninput="fastqURLSelectionChanged()"
 											multiple></select>
+									</div>
+									<div id="uploaddiv">
+										<form id="uploadform" method="POST"
+											enctype="multipart/form-data">
+											<input type="hidden" value="" id="jobid" name="jobid" /> <input
+												type="hidden" value="" name="filenames" id="filenames" /><input
+												type="hidden" value="" name="filesizes" id="filesizes" /> <input
+												type="file" style="display: none;" id="fastqfiles"
+												name="fastq" multiple accept=".fq,.fastq,.gz,.gzip"
+												onchange="updateUploadFormData()" />
+										</form>
+									</div>
+									<div id="choosefilesdiv">
+										<button type="button" id="choosefiles"
+											onclick="updateFormFiles()">
+											<span data-i18n="choosefiles"></span>
+											<svg class="featherc">
+												<use href="feather-sprite.svg#folder" /></svg>
+										</button>
 									</div></td>
 							</tr>
 							<tr>
@@ -279,6 +304,14 @@ String version = Version.class.getPackage().getImplementationVersion();
 											<span data-i18n="stopjob"></span>
 											<svg class="featherc">
 											<use href="feather-sprite.svg#x-octagon" /></svg>
+										</button>
+									</div>
+									<div id="delaybuttondiv" style="display: none">
+										<button type="button" id="delayjobbutton" class="jobdelay"
+											onclick="delayedJob()">
+											<span data-i18n="enqueue"></span>
+											<svg class="featherc">
+											<use href="feather-sprite.svg#pause" /></svg>
 										</button>
 									</div>
 									<button type="button" id="deletejobbutton"
@@ -744,7 +777,7 @@ String version = Version.class.getPackage().getImplementationVersion();
 			</div>
 			<div class="hline"></div>
 			<div id="footer" style="position: relative;">
-				<div class="down left"><jsp:include page="leftfooter.jsp"/></div>
+				<div class="down left"><jsp:include page="leftfooter.jsp" /></div>
 				<div id="userinfo">
 					<div class="down right">
 						<span data-i18n="loggedinas"></span> <span id="username"></span> /

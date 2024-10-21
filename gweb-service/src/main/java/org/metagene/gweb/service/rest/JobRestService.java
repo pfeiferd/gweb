@@ -101,11 +101,20 @@ public abstract class JobRestService extends CRUDRestService<JobService, Job> im
 
 	@Override
 	@GET
+	@Path("getActiveJobIds")
+	@Produces(APPLICATION_JSON_UTF8)
+	public long[] getActiveJobIds() {
+		return getDelegate().getActiveJobIds();
+	}
+	
+	@Override
+	@GET
 	@Path("getJobIdsByStatus/{status}")
 	@Produces(APPLICATION_JSON_UTF8)
 	public long[] getJobIdsByStatus(@PathParam("status") JobStatus status) {
 		return getDelegate().getJobIdsByStatus(status);
 	}
+		
 	@GET
 	@Path("isCSVExists/{id}")
 	@Produces(APPLICATION_JSON_UTF8)

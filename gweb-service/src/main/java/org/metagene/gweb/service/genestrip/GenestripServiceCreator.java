@@ -31,8 +31,11 @@ import javax.sql.DataSource;
 
 import org.metagene.genestrip.GSCommon;
 import org.metagene.genestrip.GSProject;
+import org.metagene.genestrip.io.StreamingResourceStream;
 import org.metagene.gweb.service.compute.JobExecutable.Factory;
 import org.metagene.gweb.service.create.ServiceCreator;
+import org.metagene.gweb.service.dto.Job;
+import org.metagene.gweb.service.rest.RestApplication;
 
 public class GenestripServiceCreator extends ServiceCreator {
 	private GSCommon gsCommon;
@@ -40,7 +43,7 @@ public class GenestripServiceCreator extends ServiceCreator {
 	public GenestripServiceCreator(DataSource dataSource, Config config, Logger logger) {
 		super(dataSource, config, logger);
 	}
-	
+
 	@Override
 	protected void createGSConfig(File genestripBaseDir) {
 		try {
@@ -49,16 +52,16 @@ public class GenestripServiceCreator extends ServiceCreator {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public File getFastqDir() {
 		return gsCommon.getFastqDir();
 	}
-	
+
 	@Override
 	protected File getCSVBaseDir(String projectName) {
 		return new GSProject(gsCommon, projectName, true).getResultsDir();
 	}
-	
+
 	@Override
 	protected File getLogBaseDir(String projectName) {
 		return new GSProject(gsCommon, projectName, true).getLogDir();
@@ -68,16 +71,39 @@ public class GenestripServiceCreator extends ServiceCreator {
 	protected File getDBFile(String projectName) {
 		return new GSProject(gsCommon, projectName, true).getDBFile();
 	}
-	
+
 	@Override
 	protected File getDBInfoFile(String projectName) {
-		return new GSProject(gsCommon, projectName, true).getDBInfoFile();		
+		return new GSProject(gsCommon, projectName, true).getDBInfoFile();
 	}
-	
+
 	@Override
 	protected Factory createsJobExecutableFactory() {
 		int threads = Integer.parseInt(getConfig().getConfigValue(THREADS, -1));
 		long logProgress = Long.parseLong(getConfig().getConfigValue(LOG_PROGRESS, 1000000));
-		return new GenestripJobExecutableFactory(gsCommon, threads, logProgress);
+		return new GenestripJobExecutableFactory(gsCommon, threads, logProgress,
+				// This delegate helps to delay the access to the config as the provider might
+				// not be there yet
+				// at the time when calling createsJobExecutableFactory()
+				new StreamingResourceForJobProvider() {
+
+					@Override
+					public StreamingResourceStream getResourcesForJob(Job job) {
+						StreamingResourceForJobProvider provider = getProviderFromConfig();
+						return provider == null ? null : provider.getResourcesForJob(job);
+					}
+
+					@Override
+					public Object getJobStartSyncObject() {
+						StreamingResourceForJobProvider provider = getProviderFromConfig();
+						return provider == null ? null : provider.getJobStartSyncObject();
+					}
+
+					// Get the underlying provider as late as possible...
+					private StreamingResourceForJobProvider getProviderFromConfig() {
+						return (StreamingResourceForJobProvider) getConfig()
+								.getConfigAttribute(RestApplication.SR_FOR_JOB_PROVIDER);
+					}
+				});
 	}
 }

@@ -92,10 +92,10 @@ var i18n = {
 		dbfileprefixf: "Basis-Dateiname:",
 		editdb: "Datenbank bearbeiten:",
 		jobname: "Name",
-		fastqfile: "FastQ File / URL",
-		fastqfile2: "FastQ File / URL 2",
+		Fastqfile: "Fastq File / URL",
+		fastqfile2: "Fastq File / URL 2",
 		jobnamef: "Name:",
-		fastqfilef: "FastQ Dateien:",
+		fastqfilef: "Fastq Dateien:",
 		editjob: "Job bearbeiten:",
 		foruser: "Für Benutzer:",
 		fordb: "Für Datenbank:",
@@ -119,7 +119,7 @@ var i18n = {
 		jstarted: "Gestartet:",
 		jfinished: "Beendet:",
 		jduration: "Dauer:",
-		jfiles: "Gewählte Dateien / URLs:",
+		jfiles: "Gewählte Dateien / Quellen:",
 		jlogf: "Log:",
 		jres: "Resultat:",
 		jshowdir: "In Ordner",
@@ -135,18 +135,19 @@ var i18n = {
 		throle: "Rolle",
 		dbinfof: "Info-Datei:",
 		createdbinfo: "Job starten...",
-		restab: "FastQ URLs",
+		restab: "Fastq-Quellen",
 		resnamef: "Name:",
-		resurlf: "URL:",
-		editres: "FastQ URL bearbeiten:",
+		resurlf: "URL / Server-Pfad:",
+		editres: "Fastq-Quelle bearbeiten:",
 		resname: "Name",
 		resurl: "URL",
-		LOCAL_MATCH: "Match für Datei",
-		RES_MATCH: "Match für URL ",
+		LOCAL_MATCH: "Analyse von Server-Datei(en)",
+		RES_MATCH: "Analyse von Fastq-Quelle(n)",
 		DB_INFO: "DB Info",
 		INSTALL_DB: "DB Install",
+		UPLOAD_MATCH: "Analyse von Upload-Datei(en)",
 		jobtype: "Job-Typ:",
-		fastqurlf: "Fastq URLs:",
+		fastqurlf: "Fastq-Quellen:",
 		search: "Suchen:",
 		viewjobres: "Ansehen...",
 		viewdbres: "Ansehen...",
@@ -162,7 +163,14 @@ var i18n = {
 		errorrate: "Fehlerrate:",
 		restype: "Typ:",
 		FILE_PATH: "Dateipfad auf Server",
-		HTTP_URL: "HTTP(S)"
+		HTTP_URL: "HTTP(S)",
+		choosefiles: "Dateien auswählen...",
+		files: "Dateien",	
+		uploadError: "Upload und Analyse der Fastq Dateien ist fehlgeschlagen mit Fehler:",
+		uploadSuccess: "Upload und Analyse abgeschlossen.",
+		uploadInfo: "Upload und Analyse laufen im Hintergrund. Bitte schließen Sie dieses Browser-Tab nicht bis zum Abschluss oder der Job wird abgebrochen.",
+		jobdelayed: "Zur Zeit werden andere Jobs bearbeitet. 'Upload und Analyse' ist nicht möglich, solange andere Jobs aktiv sind. Bitte versuchen Sie es später noch einmal.",
+		fastquploadf: "Fastq Dateien zum Upload:"
 	},
 	en: {
 		de: "Deutsch",
@@ -218,10 +226,10 @@ var i18n = {
 		dbfileprefixf: "Base File Name:",
 		editdb: "Edit Database:",
 		jobname: "Name",
-		fastqfile: "FastQ File / URL",
-		fastqfile2: "FastQ File / URL 2",
+		fastqfile: "Fastq File / URL",
+		fastqfile2: "Fastq File / URL 2",
 		jobnamef: "Name:",
-		fastqfilef: "FastQ Files:",
+		fastqfilef: "Fastq Files:",
 		editjob: "Edit Job:",
 		foruser: "For User:",
 		fordb: "For Database:",
@@ -245,7 +253,7 @@ var i18n = {
 		jstarted: "Started:",
 		jfinished: "Finished:",
 		jduration: "Duration:",
-		jfiles: "Chosen Files / URLs:",
+		jfiles: "Chosen Files / Sources:",
 		jlogf: "Log:",
 		jres: "Result:",
 		jshowdir: "In Folder",
@@ -261,18 +269,19 @@ var i18n = {
 		throle: "Role",
 		dbinfof: "Info-File:",
 		createdbinfo: "Run Job...",
-		restab: "FastQ URLs",
+		restab: "Fastq Sources",
 		resnamef: "Name:",
-		resurlf: "URL:",
-		editres: "Edit FastQ Resource:",
+		resurlf: "URL / Server Path:",
+		editres: "Edit Fastq Source:",
 		resname: "Name",
 		resurl: "URL",
-		LOCAL_MATCH: "Match for File",
-		RES_MATCH: "Match for URL ",
+		LOCAL_MATCH: "Analysis of Server File(s)",
+		RES_MATCH: "Analysis of Fastq Source(s)",
 		DB_INFO: "DB Info",
 		INSTALL_DB: "DB Install",
+		UPLOAD_MATCH: "Analysis of Upload File(s)",
 		jobtype: "Job Type:",
-		fastqurlf: "Fastq URLs:",
+		fastqurlf: "Fastq Sources:",
 		search: "Search:",
 		viewjobres: "View...",
 		viewdbres: "View...",
@@ -288,7 +297,14 @@ var i18n = {
 		errorrate: "Error Rate:",
 		restype: "Type:",
 		FILE_PATH: "File Path on Server",
-		HTTP_URL: "HTTP(S)"
+		HTTP_URL: "HTTP(S)",
+		choosefiles: "Choose Files...",
+		files: "Files",
+		uploadError: "Upload and analysis of fastq files failed with error:",
+		uploadSuccess: "Upload and analysis finished.",
+		uploadInfo: "Upload and analysis are now running in background. Please don't close this browser tab or else the job will be canceled.",
+		jobdelayed: "Other jobs are being processed. 'Upload and Analysis' cannot be started as long as there are active jobs. Please try again later.",
+		fastquploadf: "Fastq Files for Upload:"		
 	}
 };
 
@@ -319,6 +335,7 @@ function changeLan(lan) {
 	document.getElementById("INSTALL_DB").textContent = i18n[state.currentLan]["INSTALL_DB"];
 	document.getElementById("HTTP_URL").textContent = i18n[state.currentLan]["HTTP_URL"];
 	document.getElementById("FILE_PATH").textContent = i18n[state.currentLan]["FILE_PATH"];
+	document.getElementById("UPLOAD_MATCH").textContent = i18n[state.currentLan]["UPLOAD_MATCH"];
 
 	if (loggedInUser != null) {
 		updateRole();
@@ -434,7 +451,6 @@ function cInfo(message, okCode) {
 	document.getElementById("alertmessage").innerHTML = message;
 	document.getElementById("modalalert").style.display = "block";
 }
-
 
 function okAlert() {
 	document.getElementById("modalalert").style.display = "none";

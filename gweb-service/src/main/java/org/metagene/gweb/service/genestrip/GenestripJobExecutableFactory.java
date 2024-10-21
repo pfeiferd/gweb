@@ -42,6 +42,7 @@ import org.metagene.genestrip.GSProject;
 import org.metagene.genestrip.GSProject.FileType;
 import org.metagene.genestrip.goals.DBDownloadGoal;
 import org.metagene.genestrip.goals.LoadDBGoal;
+import org.metagene.genestrip.io.StreamingResourceStream;
 import org.metagene.genestrip.make.Goal;
 import org.metagene.genestrip.store.Database;
 import org.metagene.genestrip.util.GSLogFactory;
@@ -59,11 +60,13 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 
 	private final MyDefaultExecutionContext bundle;
 	private final GSCommon common;
+	private final StreamingResourceForJobProvider provider;
 
 	private Database storeCache;
 	private File storeCacheFile;
 
-	public GenestripJobExecutableFactory(GSCommon common, int consumers, long logUpdateCycle) {
+	public GenestripJobExecutableFactory(GSCommon common, int consumers, long logUpdateCycle,
+			StreamingResourceForJobProvider provider) {
 		this.common = common;
 		bundle = new MyDefaultExecutionContext(consumers, logUpdateCycle) {
 			@Override
@@ -71,11 +74,17 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 				return true;
 			}
 		};
+		this.provider = provider;
 	}
 
 	@Override
 	public JobExecutable createExecutable(Job job, DB db, ResourceService resourceService) {
 		return new GenestripJobExecutable(job, db, resourceService);
+	}
+
+	@Override
+	public Object getJobStartSyncObject() {
+		return provider == null ? null : provider.getJobStartSyncObject();
 	}
 
 	public class GenestripJobExecutable implements JobExecutable {
@@ -137,7 +146,8 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 				}
 			}
 			GSGoalKey matchKey = job.isClassifyReads() ? GSGoalKey.MATCH : GSGoalKey.MATCHLR;
-			GSProject project = new GSProject(common, db.getDbFilePrefix(), String.valueOf(job.getId()), files, true) {
+			String key = String.valueOf(job.getId());
+			GSProject project = new GSProject(common, db.getDbFilePrefix(), key, files, true) {
 				@Override
 				protected String getOutputFilePrefix(String goal) {
 					if (goal.equals(matchKey.getName())) {
@@ -152,6 +162,18 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 						return key;
 					}
 					return super.getOutputFileGoalPrefix(goal, key);
+				}
+				
+				@Override
+				public String getExtraResourcesKey() {
+					return key;
+				}
+
+				@Override
+				public StreamingResourceStream getExtraResources() {
+					return (JobType.UPLOAD_MATCH.equals(job.getJobType()) && provider != null)
+							? provider.getResourcesForJob(job)
+							: null;
 				}
 			};
 			if (!project.getProjectsDir().exists()) {
@@ -176,6 +198,7 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 					switch (job.getJobType()) {
 					case LOCAL_MATCH:
 					case RES_MATCH:
+					case UPLOAD_MATCH:
 						match(project, maker, matchKey);
 						break;
 					case DB_INFO:
@@ -311,6 +334,7 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 			switch (job.getJobType()) {
 			case LOCAL_MATCH:
 			case RES_MATCH:
+			case UPLOAD_MATCH:
 			case INSTALL_DB:
 				return new JobProgress(bundle.coveredBytes, bundle.estTotalBytes, bundle.elapsedTimeMS,
 						bundle.estTotalTimeMS, bundle.ratio);

@@ -32,6 +32,7 @@ import org.metagene.gweb.service.dto.JobProgress;
 public interface JobExecutable {
 	public interface Factory {
 		public JobExecutable createExecutable(Job job, DB db, ResourceService resourceService);
+		public Object getJobStartSyncObject();
 	}
 	
 	// Synchronous execution in current thread.

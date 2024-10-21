@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://java.sun.com/xml/ns/javaee"
-	xmlns:jsp="http://java.sun.com/xml/ns/javaee/jsp"
 	xmlns:web="http://java.sun.com/xml/ns/javaee"
+	xmlns:jsp="http://java.sun.com/xml/ns/javaee/jsp"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
 	<display-name>gweb</display-name>
@@ -34,7 +34,7 @@
 		</init-param>
 		<init-param>
 			<param-name>testMode</param-name>
-			<param-value>false</param-value>
+			<param-value>true</param-value>
 		</init-param>
 		<init-param>
 			<param-name>defaultUser</param-name>
@@ -42,7 +42,7 @@
 		</init-param>
 		<init-param>
 			<param-name>genestripBaseDir</param-name>
-			<param-value>./data</param-value>
+			<param-value>/Users/dpfeifer/progotec-workspace/gweb/gweb-ui/data</param-value>
 		</init-param>
 		<init-param>
 			<param-name>sqlDialect</param-name>
@@ -61,6 +61,10 @@
 		<servlet-name>Log</servlet-name>
 		<jsp-file>/log/log.jsp</jsp-file>
 	</servlet>
+	<servlet>
+		<servlet-name>FastqUpload</servlet-name>
+		<servlet-class>org.metagene.gweb.service.genestrip.upload.StreamingFastqUploadProcessor</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>org.metagene.gweb.service.genestrip.GenestripRestApplication</servlet-name>
 		<url-pattern>/rest/*</url-pattern>
@@ -76,6 +80,10 @@
 	<servlet-mapping>
 		<servlet-name>Log</servlet-name>
 		<url-pattern>/log</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>FastqUpload</servlet-name>
+		<url-pattern>/fastqupload</url-pattern>
 	</servlet-mapping>
 	<mime-mapping>
 		<extension>html</extension>
@@ -102,7 +110,15 @@
 	</session-config>
 	<context-param>
 		<param-name>filePathRole</param-name>
-		<param-value>ADMIN</param-value>
+		<param-value>RUN_JOBS</param-value>
+	</context-param>
+	<context-param>
+		<param-name>uploadPathRole</param-name>
+		<param-value>RUN_JOBS</param-value>
+	</context-param>
+	<context-param>
+		<param-name>localInstall</param-name>
+		<param-value>false</param-value>
 	</context-param>
 	<resource-ref>
 		<description>DB Connection</description>

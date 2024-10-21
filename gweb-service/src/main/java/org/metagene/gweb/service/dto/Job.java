@@ -47,7 +47,7 @@ public class Job extends DTO {
 	};
 
 	public enum JobType {
-		LOCAL_MATCH, DB_INFO, RES_MATCH, INSTALL_DB, PATH_MATCH;
+		LOCAL_MATCH, DB_INFO, RES_MATCH, INSTALL_DB, UPLOAD_MATCH;
 
 		private static final JobType[] JOB_TYPE_VALUES = JobType.values();
 
@@ -75,7 +75,7 @@ public class Job extends DTO {
 	private Date finished;
 
 	private long coveredBytes;
-	
+
 	private boolean classifyReads;
 	private double errorRate;
 
@@ -180,10 +180,11 @@ public class Job extends DTO {
 	public String getFastqFile() {
 		return fastqFile;
 	}
-	
+
 	public boolean checkFastqFileValid() {
-		return (!JobType.LOCAL_MATCH.equals(jobType) && fastqFile == null) || (JobType.LOCAL_MATCH.equals(jobType)
-				&& fastqFile != null && !fastqFile.isEmpty() && fastqFile.indexOf(File.separatorChar) == -1);
+		return (!JobType.LOCAL_MATCH.equals(jobType) && fastqFile == null)
+				|| ((JobType.UPLOAD_MATCH.equals(jobType) || JobType.LOCAL_MATCH.equals(jobType)) && fastqFile != null
+						&& !fastqFile.isEmpty() && fastqFile.indexOf(File.separatorChar) == -1);
 	}
 
 	public boolean checkResourceIdValid() {
@@ -200,18 +201,18 @@ public class Job extends DTO {
 	}
 
 	public boolean checkFastqFile2Valid() {
-		return fastqFile2 == null || (JobType.LOCAL_MATCH.equals(jobType) && !fastqFile2.isEmpty()
-				&& fastqFile2.indexOf(File.separatorChar) == -1);
+		return fastqFile2 == null || ((JobType.UPLOAD_MATCH.equals(jobType) || JobType.LOCAL_MATCH.equals(jobType))
+				&& !fastqFile2.isEmpty() && fastqFile2.indexOf(File.separatorChar) == -1);
 	}
 
 	public long getDbId() {
 		return dbId;
 	}
-	
+
 	public void setClassifyReads(boolean classifyReads) {
 		this.classifyReads = classifyReads;
 	}
-	
+
 	public boolean isClassifyReads() {
 		return classifyReads;
 	}
@@ -231,15 +232,15 @@ public class Job extends DTO {
 	public void setCoveredBytes(long coveredBytes) {
 		this.coveredBytes = coveredBytes;
 	}
-	
+
 	public double getErrorRate() {
 		return errorRate;
 	}
-	
+
 	public void setErrorRate(double errorRate) {
 		this.errorRate = errorRate;
 	}
-	
+
 	public boolean checkErrorRateValid() {
 		return errorRate >= 0;
 	}

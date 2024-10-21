@@ -11,6 +11,9 @@ var cachedUserId = null;
 var cachedFileSel1 = null;
 var cachedFileSel2 = null;
 
+var delayUploadStart = false;
+var ssState = "start";
+
 function clearJobForm() {
 	bindJobToForm(newJob());
 	checkJobInForm();
@@ -91,7 +94,7 @@ function createTableRowForJob(index) {
 	var job = allData["job"][index];
 	var fastq1 = "";
 	var fastq2 = "";
-	if (job.jobType == "LOCAL_MATCH") {
+	if (job.jobType == "LOCAL_MATCH" || job.jobType == "UPLOAD_MATCH") {
 		fastq1 = job.fastqFile == null ? "" : htmlEscape(job.fastqFile);
 		fastq2 = job.fastqFile2 == null ? "" : htmlEscape(job.fastqFile2);
 	}
@@ -195,7 +198,11 @@ function checkJobInForm() {
 	document.getElementById("createjobbutton").disabled = !isJobRunner(loggedInUser) || (selectedJob != null && changed);
 	document.getElementById("resetjobbutton").disabled = !changed;
 	document.getElementById("savejobbutton").disabled = !validated || !changed;
-	document.getElementById("startjobbutton").disabled = !(validated && !changed && selectedJob != null && selectedJob.status == "CREATED");
+
+	var startButtonEnabled = validated && !changed && selectedJob != null && selectedJob.status == "CREATED" && (selectedJob.jobType != "UPLOAD_MATCH" ||
+		(selectedJob.jobType == "UPLOAD_MATCH" && document.getElementById("fastqfiles").files.length > 0))
+	document.getElementById("startjobbutton").disabled = !startButtonEnabled;
+	document.getElementById("delayjobbutton").disabled = !startButtonEnabled;
 
 	var classify = document.getElementById("classifyreads").checked;
 	document.getElementById("errorratefield").disabled = !classify;
@@ -205,13 +212,30 @@ function checkJobInForm() {
 			document.getElementById("errorratefield").value = errorRateDefault;
 		}
 	}
-	
-	updateStartStopButtons(selectedJob != null && (selectedJob.status == "STARTED" || selectedJob.status == "ENQUEUED"));
+
+	var jobType = document.getElementById("jobtype").value;
+	document.getElementById("choosefiles").disabled = !(selectedJob != null && ((selectedJob.status == null || selectedJob.status == "CREATED") && jobType == "UPLOAD_MATCH"));
+
+	updateStartStopButtons((selectedJob != null && (selectedJob.status == "STARTED" || selectedJob.status == "ENQUEUED")) ? "stop" : "start");
 }
 
-function updateStartStopButtons(running) {
-	document.getElementById("startbuttondiv").style.display = running ? "none" : "inline";
-	document.getElementById("stopbuttondiv").style.display = running ? "inline" : "none";
+function updateStartStop() {
+	updateStartStopButtons(ssState)
+}
+
+function updateStartStopButtons(s) {
+	document.getElementById("delaybuttondiv").style.display = "none";
+	document.getElementById("stopbuttondiv").style.display = "none";
+	document.getElementById("startbuttondiv").style.display = "none";
+
+	ssState = s;
+	if (s == "start") {
+		var jobType = document.getElementById("jobtype").value;
+		if (jobType == "UPLOAD_MATCH" && delayUploadStart) {
+			s = "delay";
+		}
+	}
+	document.getElementById(s + "buttondiv").style.display = "inline";
 }
 
 function hasJobInFormChanged() {
@@ -223,13 +247,17 @@ function completeJobData(job, fromJob) {
 	job.enqueued = fromJob.enqueued;
 	job.finished = fromJob.finished;
 	job.status = fromJob.status;
-	job.jobType = fromJob.jobType;
+	//	job.jobType = fromJob.jobType;
 	job.coveredBytes = fromJob.coveredBytes;
 	if (fromJob.status == "FINISHED" || fromJob.status == "E_CANCELED" || fromJob.status == "S_CANCELED") {
 		job.fastqFile = fromJob.fastqFile;
 		job.fastqFile2 = fromJob.fastqFile2;
 		job.resourceId = fromJob.resourceId;
 		job.resourceId2 = fromJob.resourceId2;
+	}
+	else if (job.jobType == "UPLOAD_MATCH" && fromJob.jobType == "UPLOAD_MATCH") {
+		job.fastqFile = fromJob.fastqFile;
+		job.fastqFile2 = fromJob.fastqFile2;
 	}
 
 	return job;
@@ -239,7 +267,7 @@ function validateJobInForm() {
 	var job = newJob();
 	extractJobFromForm(job);
 
-	var isMatchType = job.jobType == "RES_MATCH" || job.jobType == "LOCAL_MATCH";
+	var isMatchType = job.jobType == "RES_MATCH" || job.jobType == "LOCAL_MATCH" || job.jobType == "UPLOAD_MATCH";
 
 	var validU = !updateMandatory("jobnamefield", selectedJob != null && job.name == "");
 	var validF = !updateMandatory("fastqfilesel", selectedJob != null && job.status == null && job.fastqFile == null && isMatchType);
@@ -248,7 +276,7 @@ function validateJobInForm() {
 	var validUser = !updateMandatory("foruser", selectedJob != null && job.userId == -1);
 	var validER = !updateMandatory("errorratefield", job.classifyReads && selectedJob != null && isMatchType && !(job.errorRate >= 0));
 
-	return validU && (validF || validURL) && validD && validUser && validER;
+	return validU && (validF || validURL || job.jobType == "UPLOAD_MATCH") && validD && validUser && validER;
 }
 
 function createJob() {
@@ -272,13 +300,13 @@ function newJob() {
 	job.resourceId = -1;
 	job.resourceId2 = -1;
 	job.dbId = -1;
-	job.userId = -1; 
+	job.userId = -1;
 	job.enqueued = null;
 	job.started = null;
 	job.finished = null;
 	job.status = null;
 	job.coveredBytes = null;
-	job.jobType = "LOCAL_MATCH";
+	job.jobType = "UPLOAD_MATCH";
 	job.classifyReads = false;
 	job.errorRate = errorRateDefault;
 
@@ -397,7 +425,7 @@ function extractJobFromForm(job) {
 
 	job.userId = getJobUserFromForm();
 
-	job.classifyReads = document.getElementById("classifyreads").checked && (job.jobType == "LOCAL_MATCH" || job.jobType == "RES_MATCH");
+	job.classifyReads = document.getElementById("classifyreads").checked && (job.jobType == "LOCAL_MATCH" || job.jobType == "RES_MATCH" || job.jobType == "UPLOAD_MATCH");
 	job.errorRate = parseFloat(document.getElementById("errorratefield").value);
 
 	return job;
@@ -433,7 +461,7 @@ function bindJobToForm(job) {
 	document.getElementById("jres").innerHTML = "";
 	document.getElementById("jlogf").innerHTML = "";
 
-	var match = job.jobType == "LOCAL_MATCH" || job.jobType == "RES_MATCH";
+	var match = job.jobType == "LOCAL_MATCH" || job.jobType == "RES_MATCH" || job.jobType == "UPLOAD_MATCH";
 	document.getElementById("classifyreads").checked = match && job.classifyReads;
 	document.getElementById("errorratefield").value = job.errorRate;
 	document.getElementById("crtext").style.display = match ? "block" : "none";
@@ -479,6 +507,24 @@ function bindJobToForm(job) {
 			request.open("GET", restPath + "/JobService/isCSVExists/" + job.id, false);
 			request.send();
 		}
+		if (job.jobType == "UPLOAD_MATCH") {
+			if (job.status == "CREATED") {
+				updateUploadFormData();
+			}
+			else {
+				var files = "";
+				var file1 = job.fastqFile;
+				if (file1 != null && file1 != "") {
+					files = file1;
+				}
+				var file2 = job.fastqFile2;
+				if (file2 != null && file2 != "") {
+					files = files + ", " + file2;
+				}
+				document.getElementById("jfiles").innerHTML = htmlEscape(files);
+			}
+			document.getElementById("choosefiles").disabled = !(job.status == "CREATED" || job.status == null);
+		}
 	}
 }
 
@@ -510,35 +556,72 @@ function enableJobForm(enable) {
 	document.getElementById("fastqurlsel").disabled = !enable;
 	document.getElementById("foruser").disabled = !enable;
 	document.getElementById("fordb").disabled = !enable;
-	document.getElementById("jshowdir").disabled = !isJobRunner(loggedInUser);
+	document.getElementById("jshowdir").disabled = !(enable && (isAdmin(loggedInUser) || localInstall));
 	document.getElementById("jobtype").disabled = !enable;
 	document.getElementById("classifyreads").disabled = !enable;
 	var classify = document.getElementById("classifyreads").checked;
 	document.getElementById("errorratefield").disabled = !enable || !classify;
+
+	var options = document.getElementById("jobtype").options;
+	for (var i = 0; i < options.length; i++) {
+		if (options[i].value == "UPLOAD_MATCH") {
+			options[i].disabled = uploadPathRole == null ||
+				(uploadPathRole == "ADMIN" && !isAdmin(loggedInUser)) ||
+				(uploadPathRole == "RUN_JOBS" && !isJobRunner(loggedInUser));
+			break;
+		}
+	}
 }
 
 function startJob() {
 	var job = selectedJob;
 	if (isJobRunner(loggedInUser)) {
-		if (selectedJob != null) {
-			if (selectedJob.status == "CREATED") {
-				var request = createAjaxRequest();
-				request.onreadystatechange = function() {
-					if (request.readyState == 4) {
-						var status = evalOrHandleError(request);
-						if (status == "ENQUEUED" || status == "STARTED") {
-							updateStartStopButtons(true);
+		if (job != null) {
+			if (job.status == "CREATED") {
+				if (job.jobType == "UPLOAD_MATCH") {
+					document.getElementById("jobid").value = job.id;
+					var formData = new FormData(document.getElementById("uploadform"));
+					job.status = "ENQUEUED";
+					document.getElementById("choosefiles").disabled = true;
+					updateStartStopButtons("stop");
+					cAlert("uploadInfo");
+					uploadFastqsViaForm(formData);
+				}
+				else {
+					var request = createAjaxRequest();
+					request.onreadystatechange = function() {
+						if (request.readyState == 4) {
+							var status = evalOrHandleError(request);
+							if (status == "ENQUEUED" || status == "STARTED") {
+								updateStartStopButtons("stop");
+							}
+							reloadJob(job);
 						}
-						reloadJob(job);
-					}
-				};
-				request.open("GET", restPath + "/JobService/enqueue/" + job.id, false);
-				updateStartStopButtons(true);
-				job.status = "ENQUEUED";
-				request.send();
+					};
+					request.open("GET", restPath + "/JobService/enqueue/" + job.id, false);
+					updateStartStopButtons("stop");
+					job.status = "ENQUEUED";
+					request.send();
+				}
 			}
 		}
 	}
+}
+
+function uploadFastqsViaForm(formData) {
+	var request = createAjaxRequest();
+	request.onreadystatechange = function() {
+		if (request.readyState == 4) {
+			if (request.status == 200 || request.status == 204) {
+				cAlert("uploadSuccess")
+			} else {
+				var error = request.status + " " + htmlEscape(request.statusText) + " " + htmlEscape(request.responseText);
+				cInfo(i18n[state.currentLan]["uploadError"] + "\n" + error);
+			}
+		}
+	};
+	request.open("POST", mainPath + "/fastqupload", true);
+	request.send(formData);
 }
 
 function stopJob() {
@@ -550,12 +633,12 @@ function stopJob() {
 					if (request.readyState == 4) {
 						var status = evalOrHandleError(request);
 						if (status == "ENQUEUED" || status == "STARTED") {
-							updateStartStopButtons(true);
+							updateStartStopButtons("start");
 						}
 					}
 				};
 				request.open("GET", restPath + "/JobService/cancel/" + selectedJob.id, false);
-				updateStartStopButtons(false);
+				updateStartStopButtons("start");
 				request.send();
 			}
 		}
@@ -563,8 +646,8 @@ function stopJob() {
 }
 
 function checkJobsRound() {
-	checkPendingJobs();
 	checkStatusForJobs();
+	checkPendingJobs();
 	if (selectedJob != null) {
 		var value = document.getElementById("jobtype").value;
 		if (value == "LOCAL_MATCH") {
@@ -574,67 +657,6 @@ function checkJobsRound() {
 	if (startedJobId != null) {
 		loadJobProgress(startedJobId);
 	}
-}
-
-function checkPendingJobs() {
-	var request = createAjaxRequest();
-	request.onreadystatechange = function() {
-		if (request.readyState == 4) {
-			var pendingJobIds = evalOrHandleError(request);
-			for (var i = 0; i < pendingJobIds.length; i++) {
-				if (pendingJobIds[i] != null) {
-					var td = document.getElementById("tjobid" + pendingJobIds[i]);
-					if (td != null) {
-						td.innerHTML = "<span data-i18n=\"waitpos\">" + i18n[state.currentLan].waitpos + "</span>" + " " + (i + 1);
-					}
-				}
-			}
-		}
-	};
-	request.open("GET", restPath + "/JobService/getJobIdsByStatus/ENQUEUED", true);
-	request.send();
-}
-
-function jobUserChanged() {
-	document.getElementById("jfiles").value = "";
-	selectedJob.fastqFile = null;
-	selectedJob.fastqFile2 = null;
-	selectedJob.resourceId = -1;
-	selectedJob.resourceId2 = -1;
-	checkJobInForm();
-	loadFastqFileList(getJobUserFromForm(), false);
-	updateFastqURLList(getJobUserFromForm());
-}
-
-function getJobUserFromForm() {
-	var options = document.getElementById("foruser").selectedOptions;
-	return options.length == 0 ? -1 : parseInt(options[0].value);
-}
-
-function fastqSelectionChanged() {
-	var fileOptions = document.getElementById("fastqfilesel").selectedOptions;
-	if (fileOptions.length == 1 && fileOptions[0].value == "") {
-		selectFastqs(getJobUserFromForm(), null, null);
-	}
-	else {
-		var sel1 = fileOptions.length >= 1 ? fileOptions[0].value : null;
-		var sel2 = fileOptions.length >= 2 ? fileOptions[1].value : null;
-		selectFastqs(getJobUserFromForm(), sel1, sel2);
-	}
-	checkJobInForm();
-}
-
-function fastqURLSelectionChanged() {
-	var fileOptions = document.getElementById("fastqurlsel").selectedOptions;
-	if (fileOptions.length == 1 && fileOptions[0].value == "") {
-		selectFastqURLs(null, null);
-	}
-	else {
-		var sel1 = fileOptions.length >= 1 ? fileOptions[0].value : null;
-		var sel2 = fileOptions.length >= 2 ? fileOptions[1].value : null;
-		selectFastqURLs(sel1, sel2);
-	}
-	checkJobInForm();
 }
 
 function checkStatusForJobs() {
@@ -656,7 +678,9 @@ function checkStatusForJobs() {
 					}
 					var db = null;
 					if (job.status != statusForJobs[i]) {
-						job.status = statusForJobs[i];
+						if (statusForJobs[i] != "CREATED") {
+							job.status = statusForJobs[i];
+						}
 						if (job.status == "STARTED" || job.status == "S_CANCELED") {
 							if (job.jobType == "INSTALL_DB") {
 								db = getDBById(job.dbId);
@@ -711,6 +735,72 @@ function checkStatusForJobs() {
 		request.setRequestHeader("Content-Type", "application/json");
 		request.send(JSON.stringify(ids));
 	}
+}
+
+function checkPendingJobs() {
+	var request = createAjaxRequest();
+	request.onreadystatechange = function() {
+		if (request.readyState == 4) {
+			var pendingJobIds = evalOrHandleError(request);
+			for (var i = 0; i < pendingJobIds.length; i++) {
+				if (pendingJobIds[i] != null) {
+					var job = getJobById(pendingJobIds[i]);
+					if (job != null && job.status != "STARTED") {
+						var td = document.getElementById("tjobid" + pendingJobIds[i]);
+						if (td != null) {
+							td.innerHTML = "<span data-i18n=\"waitpos\">" + i18n[state.currentLan].waitpos + "</span>" + " " + (i + 1);
+						}
+					}
+				}
+			}
+			delayUploadStart = pendingJobIds.length > 0;
+			updateStartStop();
+		}
+	};
+	request.open("GET", restPath + "/JobService/getActiveJobIds", true);
+	request.send();
+}
+
+function jobUserChanged() {
+	document.getElementById("jfiles").value = "";
+	selectedJob.fastqFile = null;
+	selectedJob.fastqFile2 = null;
+	selectedJob.resourceId = -1;
+	selectedJob.resourceId2 = -1;
+	checkJobInForm();
+	loadFastqFileList(getJobUserFromForm(), false);
+	updateFastqURLList(getJobUserFromForm());
+}
+
+function getJobUserFromForm() {
+	var options = document.getElementById("foruser").selectedOptions;
+	return options.length == 0 ? -1 : parseInt(options[0].value);
+}
+
+function fastqSelectionChanged() {
+	var fileOptions = document.getElementById("fastqfilesel").selectedOptions;
+	if (fileOptions.length == 1 && fileOptions[0].value == "") {
+		selectFastqs(getJobUserFromForm(), null, null);
+	}
+	else {
+		var sel1 = fileOptions.length >= 1 ? fileOptions[0].value : null;
+		var sel2 = fileOptions.length >= 2 ? fileOptions[1].value : null;
+		selectFastqs(getJobUserFromForm(), sel1, sel2);
+	}
+	checkJobInForm();
+}
+
+function fastqURLSelectionChanged() {
+	var fileOptions = document.getElementById("fastqurlsel").selectedOptions;
+	if (fileOptions.length == 1 && fileOptions[0].value == "") {
+		selectFastqURLs(null, null);
+	}
+	else {
+		var sel1 = fileOptions.length >= 1 ? fileOptions[0].value : null;
+		var sel2 = fileOptions.length >= 2 ? fileOptions[1].value : null;
+		selectFastqURLs(sel1, sel2);
+	}
+	checkJobInForm();
 }
 
 function reloadJob(oldJob) {
@@ -788,7 +878,7 @@ function clearFastqs() {
 	for (var i = 0; i < len; i++) {
 		select.remove(0);
 	}
-	document.getElementById("jfiles").value = "";
+	document.getElementById("jfiles").innerHTML = "";
 }
 
 function selectFastqs(userId, file1, file2) {
@@ -859,18 +949,27 @@ function loadJobProgress(jobId) {
 }
 
 function jobTypeChanged() {
-	switchFastqTypeDiv(document.getElementById("jobtype").value);
+	var jobType = document.getElementById("jobtype").value;
+	switchFastqTypeDiv(jobType);
+	if (jobType == "UPLOAD_MATCH") {
+		updateUploadFormData();
+	}
+	checkJobInForm();
 }
 
 function switchFastqTypeDiv(jobType) {
 	var fileDiv = jobType == "LOCAL_MATCH";
 	var urlDiv = jobType == "RES_MATCH";
+	var upload = jobType == "UPLOAD_MATCH";
 	document.getElementById("filesdivtext").style.display = fileDiv ? "block" : "none";
+	document.getElementById("uploaddivtext").style.display = upload ? "block" : "none";
 	document.getElementById("filesdiv").style.display = fileDiv ? "block" : "none";
+	document.getElementById("choosefilesdiv").style.display = upload ? "block" : "none";
 	document.getElementById("showdirdiv").style.display = fileDiv ? "block" : "none";
 	document.getElementById("urlsdivtext").style.display = urlDiv ? "block" : "none";
 	document.getElementById("urlsdiv").style.display = urlDiv ? "block" : "none";
-	document.getElementById("jfilestitle").style.display = (fileDiv || urlDiv) ? "block" : "none"
+	document.getElementById("jfilestitle").style.display = (fileDiv || urlDiv || upload) ? "block" : "none"
+	document.getElementById("jfiles").innerHTML = "";
 }
 
 function updateFastqURLList(userId) {
@@ -906,7 +1005,7 @@ function clearFastqURLs() {
 	for (var i = 0; i < len; i++) {
 		select.remove(0);
 	}
-	document.getElementById("jfiles").value = "";
+	document.getElementById("jfiles").innerHTML = "";
 }
 
 function selectFastqURLs(file1, file2) {
@@ -932,4 +1031,40 @@ function selectFastqURLs(file1, file2) {
 		files = files + ", " + file2Text;
 	}
 	document.getElementById("jfiles").innerHTML = htmlEscape(files);
+}
+
+function updateUploadFormData() {
+	var files = document.getElementById("fastqfiles").files;
+	var s = "";
+	var names = "";
+	var inputNames = "";
+	for (var i = 0; i < files.length; i++) {
+		if (i > 0) {
+			s = s + ",";
+			names = names + ", "
+			inputNames = inputNames + '/';
+		}
+		s = s + files[i].size;
+		names = names + files[i].name;
+		inputNames = inputNames + files[i].name;
+	}
+	var fsfield = document.getElementById("filesizes");
+	fsfield.value = s;
+	var fsnamefield = document.getElementById("filenames");
+	fsnamefield.value = inputNames;
+	if (names.length > 100) {
+		document.getElementById("jfiles").innerHTML = files.length + ' <span data-i18n="files">' + i18n[state.currentLan]["files"] + '</span>';
+	}
+	else {
+		document.getElementById("jfiles").innerHTML = htmlEscape(names);
+	}
+	checkJobInForm();
+}
+
+function delayedJob() {
+	cAlert("jobdelayed");
+}
+
+function updateFormFiles() {
+	document.getElementById('fastqfiles').click();	
 }

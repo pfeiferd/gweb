@@ -60,15 +60,18 @@ import jakarta.ws.rs.ext.Provider;
 
 public abstract class RestApplication extends Application {
 	private static boolean applyFixForJaxrsStringResultBug = true;
-	
+
 	public static void setApplyFixForJaxrsStringResultBug(boolean applyFixForJaxrsStringResultBug) {
 		RestApplication.applyFixForJaxrsStringResultBug = applyFixForJaxrsStringResultBug;
 	}
-	
+
 	public static boolean isApplyFixForJaxrsStringResultBug() {
 		return applyFixForJaxrsStringResultBug;
 	}
-	
+
+	public static final String JOB_SERVICE = "jobService";
+	public static final String SR_FOR_JOB_PROVIDER = "srForJobProvider";
+
 	public static final String TEST_MODE = "testMode";
 	public static final String DATA_SOURCE = "dataSource";
 	public static final String HASH_PASSWORD = "hashPassword";
@@ -103,12 +106,20 @@ public abstract class RestApplication extends Application {
 					}
 					return s;
 				}
+
+				@Override
+				public Object getConfigAttribute(String param) {
+					if (SR_FOR_JOB_PROVIDER.equals(param)) {
+						return servletConfig.getServletContext().getAttribute(RestApplication.SR_FOR_JOB_PROVIDER);
+					}
+					return null;
+				}
 			}, new Logger() {
 				@Override
 				public void log(String message) {
 					servletConfig.getServletContext().log(message);
 				}
-				
+
 				@Override
 				public void log(String message, Throwable t) {
 					servletConfig.getServletContext().log(message, t);
@@ -136,6 +147,8 @@ public abstract class RestApplication extends Application {
 			services.add(new JobRestService() {
 				@Override
 				protected JobService createDelegate() {
+					servletConfig.getServletContext().setAttribute(JOB_SERVICE,
+							serviceCreator.getBasicService(JobService.class));
 					return serviceCreator.createRoleService(JobService.class, getUserStore());
 				}
 			});
@@ -209,11 +222,11 @@ public abstract class RestApplication extends Application {
 			return builder.entity(errorInfo).type(RestService.APPLICATION_JSON_UTF8).build();
 		}
 	}
-		
-	public static String fixForJaxrsStringResultBug(String s) {		
-		return isApplyFixForJaxrsStringResultBug() ? "\"" + RestApplication.encodeStrForJS(s)  + "\"" : s;
+
+	public static String fixForJaxrsStringResultBug(String s) {
+		return isApplyFixForJaxrsStringResultBug() ? "\"" + RestApplication.encodeStrForJS(s) + "\"" : s;
 	}
-	
+
 	public static String encodeStrForJS(String s) {
 		if (s == null) {
 			return null;
