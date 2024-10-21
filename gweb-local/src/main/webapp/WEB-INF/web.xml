@@ -61,6 +61,10 @@
 		<servlet-name>Log</servlet-name>
 		<jsp-file>/log/log.jsp</jsp-file>
 	</servlet>
+	<servlet>
+		<servlet-name>FastqUpload</servlet-name>
+		<servlet-class>org.metagene.gweb.service.genestrip.upload.StreamingFastqUploadProcessor</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>org.metagene.gweb.service.genestrip.GenestripRestApplication</servlet-name>
 		<url-pattern>/rest/*</url-pattern>
@@ -103,6 +107,10 @@
 	<context-param>
 		<param-name>filePathRole</param-name>
 		<param-value>ADMIN</param-value>
+	</context-param>
+	<context-param>
+		<param-name>uploadPathRole</param-name>
+		<param-value>RUN_JOBS</param-value>
 	</context-param>
 	<context-param>
 		<param-name>localInstall</param-name>
