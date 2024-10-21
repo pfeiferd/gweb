@@ -154,7 +154,7 @@ The following table describes the settings.
 | Name        | Category | Type | Default Value | Description |
 | ----------- | -------- | ---- | ------------- | ----------- |
 | `localInstall` | `context-param` | `boolean` | `false` | Whether users not in an ["Admin" role](#user-roles) may see the server-side path to their fastq file folder. This should only be set to true for the [local variant of GWeb](#local-variant) |
-| `defaultUser` | `init-param` | `String` | `null` | Login name of the [default user](default-user) that is automatically logged in when accessing the GWeb UI. The user must have a database entry for this to work. If not set, the default user functionality is off. | 
+| `defaultUser` | `init-param` | `String` | `null` | Login name of the [default user](default-user) that is automatically logged in when accessing the GWeb UI. For this to work, the default user must have a database entry with identical login and password. If not set, the default user functionality is off. | 
 | `initDefaultUser` | `init-param` | `boolean` | `true` | Whether the [default user](default-user) should automatically be created with the [role "Job Viewer"](#user-roles) during Servlet initialization. If the default user already exists, it will neither be created nor changed. | 
 | `jobDelay` | `init-param` | long | 1000 | Time in ms to check the job queue for the execution of the next job (when idle). |
 | `jobPeriod` | `init-param` | long | 10000 | Waiting time in ms for the job queue to execute the next job after the former job was finished. |
