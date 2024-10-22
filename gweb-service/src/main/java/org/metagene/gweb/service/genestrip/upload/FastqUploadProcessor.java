@@ -57,7 +57,7 @@ public class FastqUploadProcessor extends AbstractFastqUploadProcessor {
 				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "wrong field name in multipart stream");
 				return null;
 			}
-			if (part.getSubmittedFileName() == null || part.getSubmittedFileName().isBlank()) {
+			if (part.getSubmittedFileName() == null || part.getSubmittedFileName().isEmpty()) {
 				response.sendError(HttpServletResponse.SC_BAD_REQUEST,
 						"blank or missing file name in multipart stream");
 				return null;

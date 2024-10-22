@@ -30,7 +30,6 @@
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.4</version>
-			<type>jar</type>
 			<!-- (provided or not depends on your container setup) -->
 			<!-- <scope>provided</scope> -->
 		</dependency>

@@ -106,7 +106,7 @@ public class StreamingResourceUploadStream implements StreamingResourceStream {
 				if (!getFieldName().equals(fi.getFieldName())) {
 					throw new IllegalArgumentException("wrong field name in multipart stream");
 				}
-				if (fi.getFileName() == null || fi.getFileName().isBlank()) {
+				if (fi.getFileName() == null || fi.getFileName().isEmpty()) {
 					throw new IllegalArgumentException("blank or missing file name in multipart stream");					
 				}
 				if (!fileNames[itCounter].equals(fi.getFileName())) {
