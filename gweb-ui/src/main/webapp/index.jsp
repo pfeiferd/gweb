@@ -23,8 +23,7 @@ String version = Version.class.getPackage().getImplementationVersion();
 		<table class="formtable">
 			<tbody>
 				<tr>
-					<td style="width: 40px; height: 40px;"><img width="35"
-						height="35" src="logo.svg" style="vertical-align: text-bottom;" /></td>
+					<td style="width: 40px; height: 40px;"><jsp:include page="topleft.jsp" /></td>
 					<td><span class="title">Genestrip Web</span></td>
 					<td style="text-align: right; vertical-align: bottom;">
 						<div id="lan" style="display: inline;">
