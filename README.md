@@ -58,7 +58,7 @@ such as genomic databases and analysis files are also kept under `gweb/data`.
 To migrate from one version of GWeb to the next, you may just backup and copy the folder `data` to a new installation folder `gweb`.
 When started, the old application data should all be present again in the new installation.
 
-A ready-made zip file of the local variant is available under [https://www.genestrip.org/files/bin/](https://www.genestrip.org/files/bin/).
+A ready-made zip file of the local variant is available under [https://genestrip.it.hs-heilbronn.de/files/bin/](https://genestrip.it.hs-heilbronn.de/files/bin/).
 
 ## Functionality
 
