@@ -66,10 +66,10 @@ GWeb's main functionality is to run jobs for genomic analysis using [Genestrip](
 
 The main features are:
 * creating and executing jobs to analyze fastq files,
-* creating URLs and paths for downloading fastq files during analysis or placing them in local file system,
+* creating URLs and paths for downloading fastq files during analysis or placing them in the local file system,
 * installing related genomic [Genestrip databases](https://github.com/pfeiferd/genestrip/blob/master/README.md#genestrip-databases) for use during analysis,
-* creating users entries and assign roles to them to handle user rights,
-* creating persons entries associated with users,
+* creating user entries and assigning roles to them to handle user rights,
+* creating person entries associated with users,
 * viewing and downloading result files from analysis,
 * viewing and downloading information files regarding Genestrip database contents.
 
@@ -98,14 +98,14 @@ Once a fastq file is placed inside the folder, GWeb will detect it and offer it 
 3. [When configured accordingly](#configuration), users under the [roles "Admin" or "Job Executor"](#user-roles) may set server-side paths to fastq files in the 
 tab "Fastq Sources". This option supports [glob patterns for file names of paths as described here](https://github.com/pfeiferd/genestrip/blob/master/README.md#usage-and-goals).
 All fastq files matching the path pattern will be jointly analyzed. Obviously, 
-this requires fastq files to present in respective locations on the server-side. This option is particularly useful under the [local variant of GWeb](#local-variant).
+this requires fastq files to be present in respective locations on the server-side. This option is particularly useful under the [local variant of GWeb](#local-variant).
 4. [When configured accordingly](#configuration), users under the [roles "Admin" or "Job Executor"](#user-roles) may upload of an arbitrary number of fastq files per job from the client-side. 
 The files will be [streamed for analysis and will not be stored on the server](https://github.com/pfeiferd/genestrip/blob/master/README.md#reading-streaming-and-downloading-fastq-files).
-This option is only enabled when no other jobs are pending or being processed on the server-side. 
+This option is only enabled, when no other jobs are pending or being processed on the server-side. 
 *The browser tab, where the upload job was started, must remain 
 open until the respective job has finished, because otherwise, the upload request supplying the data stream will be closed by the browser itself.*
 
-Regarding options 1 to 3, two entries for fastq files may be added per job at max. All matching fastq files will be jointly analyzed during that job.
+Regarding options 1 to 3, no more than two entries for fastq files may be added per job. All matching fastq files will be jointly analyzed during the corresponding job.
 
 ## Technical documentation
 
