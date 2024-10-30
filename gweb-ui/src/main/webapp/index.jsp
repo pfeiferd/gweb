@@ -152,8 +152,8 @@ String version = Version.class.getPackage().getImplementationVersion();
 										</div></th>
 									<th><span data-i18n="dbid"></span></th>
 									<th><span data-i18n="userid"></span></th>
-									<th><span data-i18n="fastqfile"></span></th>
-									<th><span data-i18n="fastqfile2"></span></th>
+									<th class="limcol"><span data-i18n="fastqfile"></span></th>
+									<th class="limcol"><span data-i18n="fastqfile2"></span></th>
 									<th><span data-i18n="jobstatus"></span></th>
 									<th><span data-i18n="queuepos"></span></th>
 								</tr>

@@ -130,8 +130,8 @@ function createTableRowForJob(index) {
 		tr = tr + ": " + htmlEscape(usersById[job.userId].login);
 	}
 	tr = tr + "</td>";
-	tr = tr + "<td>" + fastq1 + "</td>";
-	tr = tr + "<td>" + fastq2 + "</td>";
+	tr = tr + "<td class=\"limcol\">" + fastq1 + "</td>";
+	tr = tr + "<td  class=\"limcol\">" + fastq2 + "</td>";
 	tr = tr + "<td><span id=\"tstatusid" + job.id + "\" data-i18n=\"" + job.status + "\">" + i18n[state.currentLan][job.status] + "</span></td>";
 	tr = tr + "<td id=\"tjobid" + job.id + "\">";
 	if (job.status == "FINISHED") {

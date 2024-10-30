@@ -149,6 +149,10 @@ select.mandatory {
 	white-space: nowrap;
 }
 
+a, a:visited, a:hover, a:active {
+	color: inherit;
+}
+
 .selectedlan>span {
 	border: 2px solid #0084ff;
 	border-width: 0px 0px 2px 0px;
@@ -274,6 +278,11 @@ select.mandatory {
 .datatable td, th {
 	border: 1px solid #ddd;
 	padding: 2px 4px 2px 4px;
+}
+
+.limcol {
+	max-width:30vh;
+	overflow-wrap: break-word;
 }
 
 .tselected {
