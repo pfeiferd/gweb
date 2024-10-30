@@ -646,16 +646,18 @@ function stopJob() {
 }
 
 function checkJobsRound() {
-	checkStatusForJobs();
-	checkPendingJobs();
-	if (selectedJob != null) {
-		var value = document.getElementById("jobtype").value;
-		if (value == "LOCAL_MATCH") {
-			loadFastqFileList(getJobUserFromForm(), true);
+	if (isJobRunner(loggedInUser)) { // No pinging and auto refresh for job viewers...
+		checkStatusForJobs();
+		checkPendingJobs();
+		if (selectedJob != null) {
+			var value = document.getElementById("jobtype").value;
+			if (value == "LOCAL_MATCH") {
+				loadFastqFileList(getJobUserFromForm(), true);
+			}
 		}
-	}
-	if (startedJobId != null) {
-		loadJobProgress(startedJobId);
+		if (startedJobId != null) {
+			loadJobProgress(startedJobId);
+		}
 	}
 }
 
