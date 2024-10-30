@@ -913,7 +913,9 @@ function showFastqDir() {
 				if (path == null) {
 					path = "/?/" + userId;
 				}
-				cInfo(i18n[state.currentLan]["fastqFolder"] + "<br><a href=\"file://" + path + "\">" + path + "</a>");
+				cInfo(i18n[state.currentLan]["fastqFolder"] + "<br><a href=\"file://" + path + "\">" + path + "</a>&nbsp;" +
+					"<button type=\"button\" onclick='navigator.clipboard.writeText(\"" + path + "\")'><svg class=\"featherc\">" +
+					"<use href=\"feather-sprite.svg#clipboard\" /></svg></button>");
 			}
 		};
 		request.open("GET", restPath + "/FastqFileService/getFastqFolderForUser/" + userId, false);

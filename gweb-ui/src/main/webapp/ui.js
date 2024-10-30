@@ -170,7 +170,8 @@ var i18n = {
 		uploadSuccess: "Upload und Analyse abgeschlossen.",
 		uploadInfo: "Upload und Analyse laufen im Hintergrund. Bitte schließen Sie dieses Browser-Tab nicht bis zum Abschluss oder der Job wird abgebrochen.",
 		jobdelayed: "Zur Zeit werden andere Jobs bearbeitet. 'Upload und Analyse' ist nicht möglich, solange andere Jobs aktiv sind. Bitte versuchen Sie es später noch einmal.",
-		fastquploadf: "Fastq Dateien zum Upload:"
+		fastquploadf: "Fastq Dateien zum Upload:",
+		copy: "Kopieren"
 	},
 	en: {
 		de: "Deutsch",
@@ -304,7 +305,8 @@ var i18n = {
 		uploadSuccess: "Upload and analysis finished.",
 		uploadInfo: "Upload and analysis are now running in background. Please don't close this browser tab or else the job will be canceled.",
 		jobdelayed: "Other jobs are being processed. 'Upload and Analysis' cannot be started as long as there are active jobs. Please try again later.",
-		fastquploadf: "Fastq Files for Upload:"		
+		fastquploadf: "Fastq Files for Upload:",
+		copy: "Copy"
 	}
 };
 

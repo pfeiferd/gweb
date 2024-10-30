@@ -810,7 +810,7 @@ String version = Version.class.getPackage().getImplementationVersion();
 					<table class="formtable">
 						<tbody>
 							<tr>
-								<td id="alertmessage"></td>
+								<td id="alertmessage" style="overflow-wrap: break-word;"></td>
 							</tr>
 							<tr>
 								<td align="right">
@@ -832,7 +832,7 @@ String version = Version.class.getPackage().getImplementationVersion();
 					<table class="formtable">
 						<tbody>
 							<tr>
-								<td id="dialogmessage"></td>
+								<td id="dialogmessage" style="overflow-wrap: break-word;"></td>
 							</tr>
 							<tr>
 								<td align="right">
