@@ -256,7 +256,7 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 
 		private void clearDBIfCached(GSProject project) {
 			if (storeCache != null && storeCacheFile != null) {
-				if (project == null && project.getDBFile().equals(storeCacheFile)) {
+				if (project == null || project.getDBFile().equals(storeCacheFile)) {
 					storeCache = null;
 					storeCacheFile = null;
 					// Reclaim all the memory now.
