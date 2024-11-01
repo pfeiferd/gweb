@@ -229,7 +229,7 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 			if (job.getErrorRate() >= 0) {
 				project.initConfigParam(GSConfigKey.MAX_READ_TAX_ERROR_COUNT, job.getErrorRate());
 			}
-			fillDBCacheIfRequired(project, maker);
+			fetchDBFromCacheIfPossible(project, maker);
 			goal = maker.getGoal(matchKey);
 			bundle.clearThrowableList();
 			bundle.clearProgressInfo();
@@ -240,22 +240,29 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 
 		// We cache the last store, so that it does not have to be reloaded every
 		// time...
-		private void fillDBCacheIfRequired(GSProject project, GSMaker maker) {
-			LoadDBGoal updateStoreGoal = (LoadDBGoal) maker.getGoal(GSGoalKey.LOAD_DB);
+		private void fetchDBFromCacheIfPossible(GSProject project, GSMaker maker) {
+			LoadDBGoal loadDBGoal = (LoadDBGoal) maker.getGoal(GSGoalKey.LOAD_DB);
 			if (storeCache != null && storeCacheFile != null) {
-				if (project.getDBFile().equals(storeCacheFile) && !updateStoreGoal.isMade()) {
-					updateStoreGoal.setDatabase(storeCache);
+				if (project.getDBFile().equals(storeCacheFile) && !loadDBGoal.isMade()) {
+					loadDBGoal.setDatabase(storeCache);
 				}
 			}
-			storeCache = updateStoreGoal.get();
+			// Ensure the reference to the DB is gone for GC:
+			clearDBIfCached(null);
+			// The get method will consume a lot of memory (it loads the DB):
+			storeCache = loadDBGoal.get();
 			storeCacheFile = project.getDBFile();
 		}
 
-		private void clearIfCached(GSProject project) {
+		private void clearDBIfCached(GSProject project) {
 			if (storeCache != null && storeCacheFile != null) {
-				if (project.getDBFile().equals(storeCacheFile)) {
+				if (project == null && project.getDBFile().equals(storeCacheFile)) {
 					storeCache = null;
 					storeCacheFile = null;
+					// Reclaim all the memory now.
+					System.gc();
+					// Second time sometimes does the real job...
+					System.gc();
 				}
 			}
 		}
@@ -264,7 +271,7 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 			if (project.getDBInfoFile().exists()) {
 				project.getDBInfoFile().delete();
 			}
-			fillDBCacheIfRequired(project, maker);
+			fetchDBFromCacheIfPossible(project, maker);
 			goal = maker.getGoal("dbinfo");
 			goal.make();
 			finished = true;
@@ -280,7 +287,7 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 				if (project.getDBInfoFile().exists()) {
 					project.getDBInfoFile().delete();
 				}
-				clearIfCached(project);
+				clearDBIfCached(project);
 				long startMillis = System.currentTimeMillis();
 				DBDownloadGoal downloadGoal = new DBDownloadGoal(project, url, md5, bundle.getLogUpdateCycle(),
 						maker.getGoal(GSGoalKey.SETUP)) {
