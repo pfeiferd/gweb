@@ -679,10 +679,10 @@ function checkStatusForJobs() {
 						startedJobId = null;
 					}
 					var db = null;
-					if (job.status != statusForJobs[i]) {
-						if (statusForJobs[i] != "CREATED") {
-							job.status = statusForJobs[i];
-						}
+					// During fastq upload the status "CREATED" might last for while until the server
+					// starts processing. We therefore must be not reload or update the current if statusForJobs[i] == "CREATED"...
+					if (job.status != statusForJobs[i] && statusForJobs[i] != "CREATED") {
+						job.status = statusForJobs[i];
 						if (job.status == "STARTED" || job.status == "S_CANCELED") {
 							if (job.jobType == "INSTALL_DB") {
 								db = getDBById(job.dbId);
