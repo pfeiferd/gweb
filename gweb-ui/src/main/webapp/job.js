@@ -13,6 +13,7 @@ var cachedFileSel2 = null;
 
 var delayUploadStart = false;
 var ssState = "start";
+var selfCancelledJobId = null;
 
 function clearJobForm() {
 	bindJobToForm(newJob());
@@ -585,7 +586,7 @@ function startJob() {
 					document.getElementById("choosefiles").disabled = true;
 					updateStartStopButtons("stop");
 					cAlert("uploadInfo");
-					uploadFastqsViaForm(formData);
+					uploadFastqsViaForm(job.id, formData);
 				}
 				else {
 					var request = createAjaxRequest();
@@ -608,13 +609,13 @@ function startJob() {
 	}
 }
 
-function uploadFastqsViaForm(formData) {
+function uploadFastqsViaForm(jobId, formData) {
 	var request = createAjaxRequest();
 	request.onreadystatechange = function() {
 		if (request.readyState == 4) {
 			if (request.status == 200 || request.status == 204) {
 				cAlert("uploadSuccess")
-			} else {
+			} else if (!(selfCancelledJobId != null && selfCancelledJobId == jobId)) {
 				var error = request.status + " " + htmlEscape(request.statusText) + " " + htmlEscape(request.responseText);
 				cInfo(i18n[state.currentLan]["uploadError"] + "\n" + error);
 			}
@@ -637,8 +638,9 @@ function stopJob() {
 						}
 					}
 				};
-				request.open("GET", restPath + "/JobService/cancel/" + selectedJob.id, false);
 				updateStartStopButtons("start");
+				selfCancelledJobId = selectedJob.id;
+				request.open("GET", restPath + "/JobService/cancel/" + selectedJob.id, false);
 				request.send();
 			}
 		}
