@@ -14,6 +14,7 @@ var cachedFileSel2 = null;
 var delayUploadStart = false;
 var ssState = "start";
 var selfCancelledJobId = null;
+var enqueuedUploadJobId = null;
 
 function clearJobForm() {
 	bindJobToForm(newJob());
@@ -229,11 +230,17 @@ function updateStartStopButtons(s) {
 	document.getElementById("stopbuttondiv").style.display = "none";
 	document.getElementById("startbuttondiv").style.display = "none";
 
+	document.getElementById("stopjobbutton").disabled = false;
 	ssState = s;
 	if (s == "start") {
 		var jobType = document.getElementById("jobtype").value;
 		if (jobType == "UPLOAD_MATCH" && delayUploadStart) {
 			s = "delay";
+		}
+	}
+	else if (s == "stop" && selectedJob != null) {
+		if (enqueuedUploadJobId == selectedJob.id && selectedJob.status == "ENQUEUED") {
+			document.getElementById("stopjobbutton").disabled = true;
 		}
 	}
 	document.getElementById(s + "buttondiv").style.display = "inline";
@@ -584,6 +591,7 @@ function startJob() {
 					var formData = new FormData(document.getElementById("uploadform"));
 					job.status = "ENQUEUED";
 					document.getElementById("choosefiles").disabled = true;
+					enqueuedUploadJobId = job.id;
 					updateStartStopButtons("stop");
 					cAlert("uploadInfo");
 					uploadFastqsViaForm(job.id, formData);
@@ -681,8 +689,8 @@ function checkStatusForJobs() {
 						startedJobId = null;
 					}
 					var db = null;
-					// During fastq upload the status "CREATED" might last for while until the server
-					// starts processing. We therefore must be not reload or update the current if statusForJobs[i] == "CREATED"...
+					// During fastq upload the status "CREATED" might last for a while until the server
+					// starts processing. We therefore must not reload or update if statusForJobs[i] == "CREATED"...
 					if (job.status != statusForJobs[i] && statusForJobs[i] != "CREATED") {
 						job.status = statusForJobs[i];
 						if (job.status == "STARTED" || job.status == "S_CANCELED") {
