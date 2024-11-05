@@ -104,7 +104,7 @@ function selectPerson(i) {
 		checkPersonInForm();
 		enablePersonForm(isAdmin(loggedInUser));
 	};
-	if (hasUserInFormChanged()) {
+	if (hasPersonInFormChanged()) {
 		cConfirm("reallyChangeSelection", changeF);
 	}
 	else {
