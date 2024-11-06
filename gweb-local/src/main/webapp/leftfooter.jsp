@@ -5,4 +5,5 @@
 i18n.de.license = "Lizenz";
 i18n.en.license = "License";
 </script>
-<a target="_blank" href="LICENSE.txt" type="text/plain;charset=UTF-8"><span data-i18n="license"></span></a>
+<a class="lan" style="text-decoration: none;" target="_blank" href="LICENSE.txt"><svg class="feather">
+	<use href="feather-sprite.svg#external-link" /></svg>&nbsp;<span data-i18n="license"></span></a>
