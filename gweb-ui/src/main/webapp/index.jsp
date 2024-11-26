@@ -37,6 +37,10 @@ String version = Version.class.getPackage().getImplementationVersion();
 									<use href="feather-sprite.svg#flag" /></svg>
 								<span data-i18n="de" onclick="changeLan('de')"></span>
 							</div>
+							<div class="lan">
+								<a id="helplink" class="lan" style="text-decoration: none;" target="_blank"><svg class="feather">
+									<use href="feather-sprite.svg#help-circle" /></svg>&nbsp;<span data-i18n="help"></span></a>
+							</div>
 						</div>
 					</td>
 				</tr>
@@ -453,7 +457,7 @@ String version = Version.class.getPackage().getImplementationVersion();
 						<span data-i18n="search"></span> <input type="text"
 							id="dbsearchfield" oninput="searchInTable('db')" maxlength="10"
 							style="width: auto">
-						<button type="button" class="sbutton" id="clearressearch"
+						<button type="button" class="sbutton" id="cleardbsearch"
 							onclick="document.getElementById('dbsearchfield').value='';searchInTable('db');">
 							<svg class="featherc">
 												<use href="feather-sprite.svg#x" /></svg>
@@ -516,7 +520,7 @@ String version = Version.class.getPackage().getImplementationVersion();
 							<tr>
 								<td align="right"><span data-i18n="dbisinstalled"></span></td>
 								<td><input type="checkbox" id="dbisinstalled"
-									disabled="true"></td>
+										   disabled></td>
 							</tr>
 							<tr>
 								<td align="right"><span data-i18n="dbinstallurl"></span></td>

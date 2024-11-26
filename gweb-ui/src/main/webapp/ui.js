@@ -171,7 +171,9 @@ var i18n = {
 		uploadInfo: "Upload und Analyse laufen im Hintergrund. Bitte schließen Sie dieses Browser-Tab nicht bis zum Abschluss oder der Job wird abgebrochen.",
 		jobdelayed: "Zur Zeit werden andere Jobs bearbeitet. 'Upload und Analyse' ist nicht möglich, solange andere Jobs aktiv sind. Bitte versuchen Sie es später noch einmal.",
 		fastquploadf: "Fastq Dateien zum Upload:",
-		copy: "Kopieren"
+		copy: "Kopieren",
+		help: "Hilfe",
+		helplink : "https://genestrip.it.hs-heilbronn.de/site/de"
 	},
 	en: {
 		de: "Deutsch",
@@ -306,7 +308,9 @@ var i18n = {
 		uploadInfo: "Upload and analysis are now running in background. Please don't close this browser tab or else the job will be canceled.",
 		jobdelayed: "Other jobs are being processed. 'Upload and Analysis' cannot be started as long as there are active jobs. Please try again later.",
 		fastquploadf: "Fastq Files for Upload:",
-		copy: "Copy"
+		copy: "Copy",
+		help: "Help",
+		helplink : "https://genestrip.it.hs-heilbronn.de/site"
 	}
 };
 
@@ -338,6 +342,8 @@ function changeLan(lan) {
 	document.getElementById("HTTP_URL").textContent = i18n[state.currentLan]["HTTP_URL"];
 	document.getElementById("FILE_PATH").textContent = i18n[state.currentLan]["FILE_PATH"];
 	document.getElementById("UPLOAD_MATCH").textContent = i18n[state.currentLan]["UPLOAD_MATCH"];
+
+	document.getElementById("helplink").href = i18n[state.currentLan]["helplink"];
 
 	if (loggedInUser != null) {
 		updateRole();
