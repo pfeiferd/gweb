@@ -60,6 +60,13 @@ When started, the old application data should all be present again in the new in
 
 A ready-made zip file of the local variant is available under [https://genestrip.it.hs-heilbronn.de/files/bin/](https://genestrip.it.hs-heilbronn.de/files/bin/).
 
+### Help for End Users
+
+More detailed installation instructions and basic usage information tailored to end users can be found here
+[https://genestrip.it.hs-heilbronn.de/site/](https://genestrip.it.hs-heilbronn.de/site/) in English and
+also here 
+[https://genestrip.it.hs-heilbronn.de/site/de](https://genestrip.it.hs-heilbronn.de/site/de) in German.
+
 ## Functionality
 
 GWeb's main functionality is to run jobs for genomic analysis using [Genestrip](https://github.com/pfeiferd/genestrip).
