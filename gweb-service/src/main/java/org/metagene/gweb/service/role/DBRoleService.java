@@ -27,11 +27,12 @@ package org.metagene.gweb.service.role;
 import java.io.File;
 
 import org.metagene.gweb.service.DBService;
+import org.metagene.gweb.service.DefaultLoginService;
 import org.metagene.gweb.service.dto.DB;
 
 public class DBRoleService extends CRUDRoleService<DBService, DB> implements DBService {
-	public DBRoleService(DBService delegate, UserStore userStore) {
-		super(delegate, userStore);
+	public DBRoleService(DBService delegate, UserStore userStore, DefaultLoginService loginService) {
+		super(delegate, userStore, loginService);
 	}
 
 	@Override

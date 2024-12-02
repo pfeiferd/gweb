@@ -24,6 +24,7 @@
  */
 package org.metagene.gweb.service.role;
 
+import org.metagene.gweb.service.DefaultLoginService;
 import org.metagene.gweb.service.ResourceService;
 import org.metagene.gweb.service.dto.NetFileResource;
 import org.metagene.gweb.service.dto.NetFileResource.ResourceType;
@@ -32,8 +33,8 @@ import org.metagene.gweb.service.dto.User.UserRole;
 public class ResourceRoleService extends CRUDRoleService<ResourceService, NetFileResource> implements ResourceService {
 	private final UserRole minFilePathUserRole;
 
-	public ResourceRoleService(ResourceService delegate, UserStore userStore, UserRole minFilePathUserRole) {
-		super(delegate, userStore);
+	public ResourceRoleService(ResourceService delegate, UserStore userStore, UserRole minFilePathUserRole, DefaultLoginService defaultLoginService) {
+		super(delegate, userStore, defaultLoginService);
 		this.minFilePathUserRole = minFilePathUserRole;
 	}
 

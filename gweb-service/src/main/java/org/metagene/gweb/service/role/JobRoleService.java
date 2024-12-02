@@ -27,6 +27,7 @@ package org.metagene.gweb.service.role;
 import java.io.File;
 import java.util.Arrays;
 
+import org.metagene.gweb.service.DefaultLoginService;
 import org.metagene.gweb.service.JobService;
 import org.metagene.gweb.service.dto.DTO;
 import org.metagene.gweb.service.dto.Job;
@@ -35,8 +36,8 @@ import org.metagene.gweb.service.dto.JobProgress;
 import org.metagene.gweb.service.dto.User.UserRole;
 
 public class JobRoleService extends CRUDRoleService<JobService, Job> implements JobService {
-	public JobRoleService(JobService delegate, UserStore userStore) {
-		super(delegate, userStore);
+	public JobRoleService(JobService delegate, UserStore userStore, DefaultLoginService defaultLoginService) {
+		super(delegate, userStore, defaultLoginService);
 	}
 
 	@Override

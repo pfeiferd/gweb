@@ -24,40 +24,42 @@
  */
 package org.metagene.gweb.service.role;
 
+import org.metagene.gweb.service.DefaultLoginService;
 import org.metagene.gweb.service.UserService;
 import org.metagene.gweb.service.dto.User;
 
-public class UserRoleService extends CRUDRoleService<UserService, User> implements UserService {
+public class UserRoleService extends CRUDRoleService<UserService, User> implements UserService, DefaultLoginService {
 	public final String defaultUser;
 	
 	public UserRoleService(UserService delegate, UserStore userStore, String defaultUser) {
-		super(delegate, userStore);
+		super(delegate, userStore, null);
 		this.defaultUser = defaultUser;
 	}
 
 	@Override
+	public User defaultLogin() {
+		return defaultUser != null ? login(defaultUser, defaultUser) : null;
+	}
+
+	@Override
 	public User login(String login, String password) {
-		if (super.getLoggedInUser() != null) {
+		if (super.getUserFromStore() != null) {
 			logout();
 		}
 		User u = getDelegate().login(login, password);
-		setLoggedInUser(u);
+		setUserInStore(u);
 		return u;
 	}
 
 	@Override
 	public void logout() {
 		getDelegate().logout();
-		setLoggedInUser(null);
+		setUserInStore(null);
 	}
 	
 	@Override
 	public User getLoggedInUser() {
-		User user = super.getLoggedInUser();
-		if (user == null && defaultUser != null /*&& !hasSession()*/) {
-			user = login(defaultUser, defaultUser);
-		}
-		return user;
+		return super.getLoggedInUser();
 	}
 	
 	@Override

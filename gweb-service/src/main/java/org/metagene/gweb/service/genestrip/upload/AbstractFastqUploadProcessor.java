@@ -234,7 +234,7 @@ public abstract class AbstractFastqUploadProcessor extends HttpServlet implement
 			public User getUser() {
 				return AbstractFastqUploadProcessor.this.getUser(request);
 			}
-		});
+		}, null);
 	}
 
 	protected User getUser(HttpServletRequest request) {

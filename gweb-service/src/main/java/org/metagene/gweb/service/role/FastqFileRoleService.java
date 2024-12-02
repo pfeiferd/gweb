@@ -24,14 +24,15 @@
  */
 package org.metagene.gweb.service.role;
 
+import org.metagene.gweb.service.DefaultLoginService;
 import org.metagene.gweb.service.FastqFileService;
 import org.metagene.gweb.service.dto.User.UserRole;
 
 public class FastqFileRoleService extends RoleService<FastqFileService> implements FastqFileService {
 	private final boolean localInstall;
 
-	public FastqFileRoleService(FastqFileService delegate, UserStore userStore, boolean localInstall) {
-		super(delegate, userStore);
+	public FastqFileRoleService(FastqFileService delegate, UserStore userStore, boolean localInstall, DefaultLoginService defaultLoginService) {
+		super(delegate, userStore, defaultLoginService);
 		this.localInstall = localInstall;
 	}
 

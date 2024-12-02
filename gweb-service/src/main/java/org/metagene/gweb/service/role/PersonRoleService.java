@@ -24,14 +24,15 @@
  */
 package org.metagene.gweb.service.role;
 
+import org.metagene.gweb.service.DefaultLoginService;
 import org.metagene.gweb.service.PersonService;
 import org.metagene.gweb.service.dto.Person;
 import org.metagene.gweb.service.dto.User;
 import org.metagene.gweb.service.dto.User.UserRole;
 
 public class PersonRoleService extends CRUDRoleService<PersonService, Person> implements PersonService {
-	public PersonRoleService(PersonService delegate, UserStore userStore) {
-		super(delegate, userStore);
+	public PersonRoleService(PersonService delegate, UserStore userStore, DefaultLoginService defaultLoginService) {
+		super(delegate, userStore, defaultLoginService);
 	}
 
 	@Override

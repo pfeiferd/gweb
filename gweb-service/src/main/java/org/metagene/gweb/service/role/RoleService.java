@@ -24,6 +24,7 @@
  */
 package org.metagene.gweb.service.role;
 
+import org.metagene.gweb.service.DefaultLoginService;
 import org.metagene.gweb.service.dto.Job;
 import org.metagene.gweb.service.dto.NetFileResource;
 import org.metagene.gweb.service.dto.User;
@@ -32,26 +33,41 @@ import org.metagene.gweb.service.dto.User.UserRole;
 public class RoleService<S> {
 	private final S delegate;
 	private final UserStore userStore;
+	private final DefaultLoginService defaultLoginService;
 	
-	public RoleService(S delegate, UserStore userStore) {
+	public RoleService(S delegate, UserStore userStore, DefaultLoginService defaultLoginService) {
 		this.delegate = delegate;
 		this.userStore = userStore;
+		this.defaultLoginService = defaultLoginService;
 	}
 	
 	protected S getDelegate() {
 		return delegate;
 	}
-	
+
 	protected User getLoggedInUser() {
-		return userStore.getUser();
-	}
-	
-	protected UserRole getLoggedInUserRole() {
 		User user = userStore.getUser();
+		if (user == null) {
+			if (this instanceof DefaultLoginService) {
+				user = ((DefaultLoginService) this).defaultLogin();
+			}
+			else if (defaultLoginService != null) {
+				user = defaultLoginService.defaultLogin();
+			}
+		}
+		return user;
+	}
+
+	protected UserRole getLoggedInUserRole() {
+		User user = getLoggedInUser();
 		return user == null ? UserRole.NONE : user.getRole();
 	}
-	
-	protected void setLoggedInUser(User user) {
+
+	protected User getUserFromStore() {
+		return userStore.getUser();
+	}
+
+	protected void setUserInStore(User user) {
 		userStore.setUser(user);
 	}
 	

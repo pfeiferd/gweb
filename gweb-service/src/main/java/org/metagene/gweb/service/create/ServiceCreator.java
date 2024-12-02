@@ -30,13 +30,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.metagene.gweb.service.DBService;
-import org.metagene.gweb.service.FastqFileService;
-import org.metagene.gweb.service.InstallService;
-import org.metagene.gweb.service.JobService;
-import org.metagene.gweb.service.PersonService;
-import org.metagene.gweb.service.ResourceService;
-import org.metagene.gweb.service.UserService;
+import org.metagene.gweb.service.*;
 import org.metagene.gweb.service.compute.DBComputeService;
 import org.metagene.gweb.service.compute.FastqFileComputeService;
 import org.metagene.gweb.service.compute.JobComputeService;
@@ -225,33 +219,41 @@ public abstract class ServiceCreator {
 		return new InstallJDBCService(dataSource, SQLDialect.valueOf(sqlDialect));
 	}
 
+	private DefaultLoginService defaultLoginService;
+
 	@SuppressWarnings("unchecked")
 	public <T> T createRoleService(Class<T> clazz, UserStore userStore) {
-		if (clazz.equals(PersonService.class)) {
-			return (T) new PersonRoleService(getBasicService(PersonService.class), userStore);
-		} else if (clazz.equals(DBService.class)) {
-			return (T) new DBRoleService(getBasicService(DBService.class), userStore);
-		} else if (clazz.equals(UserService.class)) {
-			return (T) new UserRoleService(getBasicService(UserService.class), userStore,
-					config.getConfigValue(DEFAULT_USER));
-		} else if (clazz.equals(JobService.class)) {
-			return (T) new JobRoleService(getBasicService(JobService.class), userStore);
-		} else if (clazz.equals(FastqFileService.class)) {
-			return (T) new FastqFileRoleService(getBasicService(FastqFileService.class), userStore, localInstall);
-		} else if (clazz.equals(ResourceService.class)) {
-			UserRole role = null;
-			try {
-				role = UserRole.valueOf(config.getConfigValue(FILE_PATH_ROLE));
-				if (!role.subsumes(UserRole.RUN_JOBS)) {
-					role = null;
-				}
-			} catch (Exception e) {
-				// Ignore on purpose.
-			}
-
-			return (T) new ResourceRoleService(getBasicService(ResourceService.class), userStore, role);
+		if (clazz.equals(UserService.class)) {
+			return (T) (defaultLoginService = new UserRoleService(getBasicService(UserService.class), userStore,
+					config.getConfigValue(DEFAULT_USER)));
 		}
-		throw new IllegalArgumentException("Unknown service class " + clazz);
+		else {
+			if (defaultLoginService == null) {
+				throw new IllegalStateException("Default login service not configured.");
+			}
+			else if (clazz.equals(PersonService.class)) {
+				return (T) new PersonRoleService(getBasicService(PersonService.class), userStore, defaultLoginService);
+			} else if (clazz.equals(DBService.class)) {
+				return (T) new DBRoleService(getBasicService(DBService.class), userStore, defaultLoginService);
+			} else if (clazz.equals(JobService.class)) {
+				return (T) new JobRoleService(getBasicService(JobService.class), userStore, defaultLoginService);
+			} else if (clazz.equals(FastqFileService.class)) {
+				return (T) new FastqFileRoleService(getBasicService(FastqFileService.class), userStore, localInstall, defaultLoginService);
+			} else if (clazz.equals(ResourceService.class)) {
+				UserRole role = null;
+				try {
+					role = UserRole.valueOf(config.getConfigValue(FILE_PATH_ROLE));
+					if (!role.subsumes(UserRole.RUN_JOBS)) {
+						role = null;
+					}
+				} catch (Exception e) {
+					// Ignore on purpose.
+				}
+
+				return (T) new ResourceRoleService(getBasicService(ResourceService.class), userStore, role, defaultLoginService);
+			}
+			throw new IllegalArgumentException("Unknown service class " + clazz);
+		}
 	}
 
 	public interface Config {

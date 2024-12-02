@@ -36,16 +36,7 @@ import javax.naming.NamingException;
 import javax.naming.OperationNotSupportedException;
 import javax.sql.DataSource;
 
-import org.metagene.gweb.service.CannotRemoveException;
-import org.metagene.gweb.service.DBService;
-import org.metagene.gweb.service.FastqFileService;
-import org.metagene.gweb.service.JobService;
-import org.metagene.gweb.service.NotFoundException;
-import org.metagene.gweb.service.PersonService;
-import org.metagene.gweb.service.ResourceService;
-import org.metagene.gweb.service.ServiceException;
-import org.metagene.gweb.service.UserService;
-import org.metagene.gweb.service.ValidationException;
+import org.metagene.gweb.service.*;
 import org.metagene.gweb.service.create.ServiceCreator;
 import org.metagene.gweb.service.create.ServiceCreator.Config;
 import org.metagene.gweb.service.create.ServiceCreator.Logger;
@@ -126,16 +117,16 @@ public abstract class RestApplication extends Application {
 				}
 			});
 
-			services.add(new PersonRestService() {
-				@Override
-				protected PersonService createDelegate() {
-					return serviceCreator.createRoleService(PersonService.class, getUserStore());
-				}
-			});
 			services.add(new UserRestService() {
 				@Override
 				protected UserService createDelegate() {
 					return serviceCreator.createRoleService(UserService.class, getUserStore());
+				}
+			});
+			services.add(new PersonRestService() {
+				@Override
+				protected PersonService createDelegate() {
+					return serviceCreator.createRoleService(PersonService.class, getUserStore());
 				}
 			});
 			services.add(new DBRestService() {
