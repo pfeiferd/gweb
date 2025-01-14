@@ -55,6 +55,7 @@ var i18n = {
 		euk: "Erw. eind. K-Mere",
 		ukeukr: "Eind. K-Mere / Erw.",
 		qp: "Qualitätspred.",
+		reads1k: "Reads mit >=1 k-Mere",
 		ok: "OK",
 		nosession: "Ihre Sitzung wurde beendet. Bitte melden Sie sich bei der Hauptanwendung an.",
 		novalidjob: "Ungültige oder fehlende Job ID. Keine Daten verfügbar.",
@@ -88,6 +89,7 @@ var i18n = {
 		euk: "Exp. u. k-mers",
 		ukeukr: "U. k-mers / Exp.",
 		qp: "Quality Prediction",
+		reads1k: "Reads with >=1 k-mers",
 		ok: "OK",
 		nosession: "Your session has terminated. Please login via the main application.",
 		novalidjob: "Inavlid oder missing job ID. No data to show.",
@@ -253,8 +255,8 @@ var job = null;
 var sortOrder = true;
 var lastSortField = null;
 var allData = null;
-var fields = ["name", "rank", "taxid", "reads", "kmersfr", "kmers", "ukmers", "contigs", "avgclen", "maxclen", "maxcdesc", "dbcov", "nkmers", "euk", "ukeukr", "qp"];
-var fieldTypes = ["s", "s", "s", "i", "i", "i", "i", "i", "d", "i", "s", "d", "d", "d", "d", "d"];
+var fields = ["name", "rank", "taxid", "reads", "kmersfr", "kmers", "ukmers", "contigs", "avgclen", "maxclen", "maxcdesc", "dbcov", "nkmers", "euk", "ukeukr", "qp", "reads1k"];
+var fieldTypes = ["s", "s", "s", "i", "i", "i", "i", "i", "d", "i", "s", "d", "d", "d", "d", "d", "i"];
 
 function sortTableData(field) {
 	if (allData != null) {
@@ -422,6 +424,7 @@ function updateDataTable() {
 		tr = tr + "<td>" + htmlEscape(line.euk) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.ukeukr) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.qp) + "</td>";
+		tr = tr + "<td>" + htmlEscape(line.reads1k) + "</td>";
 /*		tr = tr + "<td>" + htmlEscape(line.maxcdesc) + "</td>"; */
 		tr = tr + "</tr>";
 

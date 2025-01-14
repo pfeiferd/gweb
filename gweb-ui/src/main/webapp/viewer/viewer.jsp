@@ -300,7 +300,15 @@ var restPath = "<%=request.getContextPath()%>" + "/rest";
 							<svg id="qpup" style="display: none;" class="featherc sorticon">
 												<use href="feather-sprite.svg#chevron-up" /></svg>
 						</div></th>
-<!-- 						
+					<th class="sortable" onclick="sortTableData('reads1k')"><span
+							data-i18n="reads1k"></span>
+						<div style="width: 16px; display: inline-block">
+							<svg id="qpdown" style="display: none;" class="featherc sorticon">
+								<use href="feather-sprite.svg#chevron-down" /></svg>
+							<svg id="qpup" style="display: none;" class="featherc sorticon">
+								<use href="feather-sprite.svg#chevron-up" /></svg>
+						</div></th>
+					<!--
 					<th class="sortable" onclick="sortTableData('maxcdesc')"><span
 						data-i18n="maxcdesc"></span>
 						<div style="width: 16px; display: inline-block">
