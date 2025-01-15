@@ -283,7 +283,6 @@ function updownPersonTable(up) {
 		if (nextIndex != -1) {
 			selectPerson(nextIndex);
 			table.children[1].children[i].scrollIntoView({behavior: "smooth", block: "center"});
-			e.preventDefault();
 		}
 	}
 }

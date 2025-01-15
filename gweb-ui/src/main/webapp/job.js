@@ -1106,7 +1106,6 @@ function updownJobTable(up) {
 		if (nextIndex != -1) {
 			selectJob(nextIndex);
 			table.children[1].children[i].scrollIntoView({behavior: "smooth", block: "center"});
-			e.preventDefault();
 		}
 	}
 }

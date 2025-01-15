@@ -403,6 +403,7 @@ function main() {
 					updownPersonTable(up);
 					break;
 			}
+			e.preventDefault();
 		}
 	});
 

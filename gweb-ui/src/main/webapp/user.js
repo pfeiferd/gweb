@@ -312,7 +312,6 @@ function updownUserTable(up) {
 		if (nextIndex != -1) {
 			selectUser(nextIndex);
 			table.children[1].children[i].scrollIntoView({behavior: "smooth", block: "center"});
-			e.preventDefault();
 		}
 	}
 }
