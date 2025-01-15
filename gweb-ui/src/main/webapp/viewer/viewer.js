@@ -15,7 +15,6 @@ if (history.pushState) {
 	};
 }
 
-
 function updateHistory() {
 	if (history.pushState && !inPopState) {
 		if (inMain) {

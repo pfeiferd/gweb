@@ -376,3 +376,31 @@ function createDBInfo() {
 		cConfirm(selectedDB.infoExists ? "reallyReplaceDBInfo" : "reallyDoDBInfo", checkAndRun);
 	}
 }
+
+function updownDBTable(up) {
+	if (selectedDB != null) {
+		let table = document.getElementById("dbtable");
+		let nextIndex = -1;
+		let index = allData["db"].indexOf(selectedDB);
+		if (!up) {
+			for (var i = index + 1; i < table.children[1].children.length; i++) {
+				if (table.children[1].children[i].style.display != "none") {
+					nextIndex = i;
+					break;
+				}
+			}
+		} else {
+			for (var i = index - 1; i >= 0; i--) {
+				if (table.children[1].children[i].style.display != "none") {
+					nextIndex = i;
+					break;
+				}
+			}
+		}
+		if (nextIndex != -1) {
+			selectDB(nextIndex);
+			table.children[1].children[i].scrollIntoView({behavior: "smooth", block: "center"});
+			e.preventDefault();
+		}
+	}
+}

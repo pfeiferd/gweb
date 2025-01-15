@@ -288,3 +288,31 @@ function enableUserForm(enable) {
 	document.getElementById("selectrole").disabled = !enable;
 	document.getElementById("forperson").disabled = !enable;
 }
+
+function updownUserTable(up) {
+	if (selectedUser != null) {
+		let table = document.getElementById("usertable");
+		let nextIndex = -1;
+		let index = allData["user"].indexOf(selectedUser);
+		if (!up) {
+			for (var i = index + 1; i < table.children[1].children.length; i++) {
+				if (table.children[1].children[i].style.display != "none") {
+					nextIndex = i;
+					break;
+				}
+			}
+		} else {
+			for (var i = index - 1; i >= 0; i--) {
+				if (table.children[1].children[i].style.display != "none") {
+					nextIndex = i;
+					break;
+				}
+			}
+		}
+		if (nextIndex != -1) {
+			selectUser(nextIndex);
+			table.children[1].children[i].scrollIntoView({behavior: "smooth", block: "center"});
+			e.preventDefault();
+		}
+	}
+}

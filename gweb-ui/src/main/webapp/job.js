@@ -1082,3 +1082,31 @@ function delayedJob() {
 function updateFormFiles() {
 	document.getElementById('fastqfiles').click();	
 }
+
+function updownJobTable(up) {
+	if (selectedJob != null) {
+		let table = document.getElementById("jobtable");
+		let nextIndex = -1;
+		let index = allData["job"].indexOf(selectedJob);
+		if (!up) {
+			for (var i = index + 1; i < table.children[1].children.length; i++) {
+				if (table.children[1].children[i].style.display != "none") {
+					nextIndex = i;
+					break;
+				}
+			}
+		} else {
+			for (var i = index - 1; i >= 0; i--) {
+				if (table.children[1].children[i].style.display != "none") {
+					nextIndex = i;
+					break;
+				}
+			}
+		}
+		if (nextIndex != -1) {
+			selectJob(nextIndex);
+			table.children[1].children[i].scrollIntoView({behavior: "smooth", block: "center"});
+			e.preventDefault();
+		}
+	}
+}

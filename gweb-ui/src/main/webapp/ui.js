@@ -382,6 +382,30 @@ function main() {
 	changeLan(state.currentLan);
 	switchFastqTypeDiv(true);
 	loadLoggedInUser();
+
+	document.addEventListener("keydown", (e) => {
+		if (e.key == "ArrowUp" || e.key == "ArrowDown") {
+			let up = e.key == "ArrowUp";
+			switch (state.currentTab) {
+				case "jobs":
+					updownJobTable(up);
+					break;
+				case "dbs":
+					updownDBTable(up);
+					break;
+				case "res":
+					updownResTable(up);
+					break;
+				case "users":
+					updownUserTable(up);
+					break;
+				case "persons":
+					updownPersonTable(up);
+					break;
+			}
+		}
+	});
+
 	inMain = false;
 }
 

@@ -259,3 +259,31 @@ function enablePersonForm(enable) {
 	document.getElementById("firstnamefield").disabled = !enable;
 	document.getElementById("lastnamefield").disabled = !enable;
 }
+
+function updownPersonTable(up) {
+	if (selectedPerson != null) {
+		let table = document.getElementById("persontable");
+		let nextIndex = -1;
+		let index = allData["person"].indexOf(selectedPerson);
+		if (!up) {
+			for (var i = index + 1; i < table.children[1].children.length; i++) {
+				if (table.children[1].children[i].style.display != "none") {
+					nextIndex = i;
+					break;
+				}
+			}
+		} else {
+			for (var i = index - 1; i >= 0; i--) {
+				if (table.children[1].children[i].style.display != "none") {
+					nextIndex = i;
+					break;
+				}
+			}
+		}
+		if (nextIndex != -1) {
+			selectPerson(nextIndex);
+			table.children[1].children[i].scrollIntoView({behavior: "smooth", block: "center"});
+			e.preventDefault();
+		}
+	}
+}
