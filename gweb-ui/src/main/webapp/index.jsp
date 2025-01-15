@@ -166,6 +166,7 @@ String version = Version.class.getPackage().getImplementationVersion();
 							</tbody>
 						</table>
 					</div>
+					<div class="hrinfo"><span id="njob"></span><span data-i18n="outof"></span><span id="ntjob"></span><span data-i18n="records"></span></div>
 					<div class="hline"></div>
 					<div class="down">
 						<span data-i18n="editjob"></span>
@@ -387,6 +388,7 @@ String version = Version.class.getPackage().getImplementationVersion();
 							</tbody>
 						</table>
 					</div>
+					<div class="hrinfo"><span id="nres"></span><span data-i18n="outof"></span><span id="ntres"></span><span data-i18n="records"></span></div>
 					<div class="hline"></div>
 					<div class="down">
 						<span data-i18n="editres"></span>
@@ -493,6 +495,7 @@ String version = Version.class.getPackage().getImplementationVersion();
 							</tbody>
 						</table>
 					</div>
+					<div class="hrinfo"><span id="ndb"></span><span data-i18n="outof"></span><span id="ntdb"></span><span data-i18n="records"></span></div>
 					<div class="hline"></div>
 					<div class="down">
 						<span data-i18n="editdb"></span>
@@ -618,6 +621,7 @@ String version = Version.class.getPackage().getImplementationVersion();
 							</tbody>
 						</table>
 					</div>
+					<div class="hrinfo"><span id="nuser"></span><span data-i18n="outof"></span><span id="ntuser"></span><span data-i18n="records"></span></div>
 					<div class="hline"></div>
 					<div class="down">
 						<span data-i18n="edituser"></span>
@@ -724,6 +728,7 @@ String version = Version.class.getPackage().getImplementationVersion();
 							</tbody>
 						</table>
 					</div>
+					<div class="hrinfo"><span id="nperson"></span><span data-i18n="outof"></span><span id="ntperson"></span><span data-i18n="records"></span></div>
 					<div class="hline"></div>
 					<div class="down">
 						<span data-i18n="editperson"></span>

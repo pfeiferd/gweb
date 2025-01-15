@@ -215,6 +215,12 @@ a, a:visited, a:hover, a:active {
 	z-index: -1;
 }
 
+.hrinfo {
+	display: block;
+	margin-top: 4px;
+	text-align: right;
+}
+
 .tab:hover {
 	cursor: default;
 }

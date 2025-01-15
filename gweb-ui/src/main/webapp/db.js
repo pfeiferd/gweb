@@ -42,6 +42,7 @@ function updateDBTable() {
 	var filter = input.value.toUpperCase();
 	clearTable(table);
 
+	let recs = 0;
 	for (var i = 0; i < allData["db"].length; i++) {
 		var DB = allData["db"][i];
 
@@ -53,8 +54,16 @@ function updateDBTable() {
 		tr = tr + "<td>" + htmlEscape(DB.dbFilePrefix) + "</td>";
 		tr = tr + "</tr>";
 
-		table.children[1].appendChild(filterTableRow(filter, createTableRow(tr)));
+		var row = createTableRow(tr);
+		if (filterTableRow(filter, row)) {
+			recs++;
+		}
+		table.children[1].appendChild(row);
 	}
+	var ntrecs = document.getElementById("ntdb");
+	ntrecs.innerHTML = allData["db"].length;
+	var nrecs = document.getElementById("ndb");
+	nrecs.innerHTML = recs;
 }
 
 function updateForDB() {

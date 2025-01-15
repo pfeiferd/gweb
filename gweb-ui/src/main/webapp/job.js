@@ -85,11 +85,18 @@ function updateJobTable() {
 	var filter = input.value.toUpperCase();
 	clearTable(table);
 
+	let recs = 0;
 	for (var i = 0; i < allData["job"].length; i++) {
 		var row = createTableRowForJob(i);
-		filterTableRow(filter, row);
+		if (filterTableRow(filter, row)) {
+			recs++;
+		}
 		table.children[1].appendChild(row);
 	}
+	var ntrecs = document.getElementById("ntjob");
+	ntrecs.innerHTML = allData["job"].length;
+	var nrecs = document.getElementById("njob");
+	nrecs.innerHTML = recs;
 }
 
 function createTableRowForJob(index) {

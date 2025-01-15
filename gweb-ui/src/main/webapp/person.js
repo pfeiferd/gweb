@@ -60,6 +60,7 @@ function updatePersonTable() {
 	var filter = input.value.toUpperCase();
 	clearTable(table);
 
+	let recs = 0;
 	for (var i = 0; i < allData["person"].length; i++) {
 		var person = allData["person"][i];
 
@@ -71,8 +72,17 @@ function updatePersonTable() {
 		tr = tr + "<td>" + htmlEscape(person.lastName) + "</td>";
 		tr = tr + "</tr>";
 
-		table.children[1].appendChild(filterTableRow(filter, createTableRow(tr)));
+		var row = createTableRow(tr);
+		filterTableRow(filter, row)
+		if (filterTableRow(filter, row)) {
+			recs++;
+		}
+		table.children[1].appendChild(row);
 	}
+	var ntrecs = document.getElementById("ntperson");
+	ntrecs.innerHTML = allData["person"].length;
+	var nrecs = document.getElementById("nperson");
+	nrecs.innerHTML = recs;
 
 	var select = document.getElementById("forperson");
 	var len = select.options.length;

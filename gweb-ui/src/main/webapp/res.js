@@ -49,6 +49,7 @@ function updateResTable() {
 	var filter = input.value.toUpperCase();
 	clearTable(table);
 
+	let recs = 0;
 	for (var i = 0; i < allData["res"].length; i++) {
 		var res = allData["res"][i];
 
@@ -65,8 +66,17 @@ function updateResTable() {
 		tr = tr + "<td>" + htmlEscape(res.url) + "</td>";
 		tr = tr + "</tr>";
 
-		table.children[1].appendChild(filterTableRow(filter, createTableRow(tr)));
+		var row = createTableRow(tr)
+		filterTableRow(filter, row);
+		if (filterTableRow(filter, row)) {
+			recs++;
+		}
+		table.children[1].appendChild(row);
 	}
+	var ntrecs = document.getElementById("ntres");
+	ntrecs.innerHTML = allData["res"].length;
+	var nrecs = document.getElementById("nres");
+	nrecs.innerHTML = recs;
 
 	updateFastqURLList(getJobUserFromForm());
 }

@@ -173,7 +173,9 @@ var i18n = {
 		fastquploadf: "Fastq Dateien zum Upload:",
 		copy: "Kopieren",
 		help: "Hilfe",
-		helplink : "https://genestrip.it.hs-heilbronn.de/site/de"
+		helplink : "https://genestrip.it.hs-heilbronn.de/site/de",
+		outof: " aus ",
+		records: " Einträge"
 	},
 	en: {
 		de: "Deutsch",
@@ -310,7 +312,9 @@ var i18n = {
 		fastquploadf: "Fastq Files for Upload:",
 		copy: "Copy",
 		help: "Help",
-		helplink : "https://genestrip.it.hs-heilbronn.de/site"
+		helplink : "https://genestrip.it.hs-heilbronn.de/site",
+		outof: " out of ",
+		records: " records"
 	}
 };
 
@@ -674,9 +678,14 @@ function searchInTable(tab) {
 	var filter = input.value.toUpperCase();
 	var table = document.getElementById(tab + "table");
 	var tr = table.getElementsByTagName("tr");
+	let recs = 0
 	for (var i = 1; i < tr.length; i++) {
-		filterTableRow(filter, tr[i]);
+		if (filterTableRow(filter, tr[i])) {
+			recs++;
+		}
 	}
+	var nrecs = document.getElementById("n" + tab);
+	nrecs.innerHTML = recs;
 }
 
 function filterTableRow(filter, row) {
@@ -693,7 +702,7 @@ function filterTableRow(filter, row) {
 		}
 	}
 	row.style.display = found ? "" : "none";
-	return row;
+	return found;
 }
 
 var appTypes = ['job', 'res', 'db', 'user', 'person'];

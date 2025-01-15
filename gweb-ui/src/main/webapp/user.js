@@ -51,6 +51,7 @@ function updateUserTable() {
 	var filter = input.value.toUpperCase();
 	clearTable(table);
 
+	let recs = 0;
 	for (var i = 0; i < allData["user"].length; i++) {
 		var user = allData["user"][i];
 
@@ -67,8 +68,17 @@ function updateUserTable() {
 		tr = tr + "</td>";
 		tr = tr + "</tr>";
 
-		table.children[1].appendChild(filterTableRow(filter, createTableRow(tr)));
+		var row = createTableRow(tr);
+		filterTableRow(filter, row)
+		if (filterTableRow(filter, row)) {
+			recs++;
+		}
+		table.children[1].appendChild(row);
 	}
+	var ntrecs = document.getElementById("ntuser");
+	ntrecs.innerHTML = allData["user"].length;
+	var nrecs = document.getElementById("nuser");
+	nrecs.innerHTML = recs;
 
 	updateUserOption("foruser");
 	updateUserOption("forresuser");
