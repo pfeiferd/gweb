@@ -175,7 +175,7 @@ var i18n = {
 		help: "Hilfe",
 		helplink : "https://genestrip.it.hs-heilbronn.de/site/de",
 		outof: " aus ",
-		records: " Einträge"
+		records: " Einträgen"
 	},
 	en: {
 		de: "Deutsch",
