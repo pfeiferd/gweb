@@ -217,7 +217,7 @@ function checkJobInForm() {
 	document.getElementById("errorratefield").disabled = !classify;
 	if (!classify) {
 		var v = parseFloat(document.getElementById("errorratefield").value);
-		if (!(v >= 0)) {
+		if (!(v >= -1)) {
 			document.getElementById("errorratefield").value = errorRateDefault;
 		}
 	}
@@ -289,7 +289,7 @@ function validateJobInForm() {
 	var validURL = !updateMandatory("fastqurlsel", selectedJob != null && job.status == null && job.resourceId == -1 && isMatchType);
 	var validD = !updateMandatory("fordb", selectedJob != null && job.dbId == -1);
 	var validUser = !updateMandatory("foruser", selectedJob != null && job.userId == -1);
-	var validER = !updateMandatory("errorratefield", job.classifyReads && selectedJob != null && isMatchType && !(job.errorRate >= 0));
+	var validER = !updateMandatory("errorratefield", job.classifyReads && selectedJob != null && isMatchType && !(job.errorRate >= -1));
 
 	return validU && (validF || validURL || job.jobType == "UPLOAD_MATCH") && validD && validUser && validER;
 }

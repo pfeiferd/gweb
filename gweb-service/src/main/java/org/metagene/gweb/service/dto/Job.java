@@ -242,7 +242,7 @@ public class Job extends DTO {
 	}
 
 	public boolean checkErrorRateValid() {
-		return errorRate >= 0;
+		return errorRate >= -1;
 	}
 
 	public boolean checkUserIdValid() {
