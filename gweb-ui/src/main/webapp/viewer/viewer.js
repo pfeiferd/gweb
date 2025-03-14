@@ -26,6 +26,8 @@ function updateHistory() {
 	}
 }
 
+var fields = ["pos", "name", "rank", "taxid", "reads", "kmersfr", "kmers", "ukmers", "contigs", "avgclen", "maxclen", "reads1k", "readsbps", "avgreadlen", "dbcov", "euk", "ukeukr", "dbkmers" ];
+
 /* I18n */
 
 var i18n = {
@@ -37,24 +39,26 @@ var i18n = {
 		statustext: "Status Text:",
 		responsetext: "Meldung:",
 		search: "Suchen:",
-		line: "Zeile",
-		rank: "Rang",
+		pos: "Pos.",
 		name: "Name",
+		rank: "Rang",
 		taxid: "Tax Id",
 		reads: "Reads",
 		kmersfr: "k-Mere v. Reads",
+		contigs: "Contigs",
+		avgclen: "Mittl. C.länge",
+		maxclen: "Max C.länge",
+		readsbps: "BPs in Reads",
+		avgreadlen: "Mittl. Read-Länge",
 		kmers: "k-Mere",
 		ukmers: "Eindeutige k-Mere",
-		contigs: "Contigs",
-		avgclen: "Durchn C.länge",
-		maxclen: "Max C.länge",
 		maxcdesc: "Max C. Deskr.",
 		dbcov: "Abdeckung",
 		nkmers: "Norm. k-Mere",
 		euk: "Erw. eind. K-Mere",
 		ukeukr: "Eind. K-Mere / Erw.",
-		qp: "Qualitätspred.",
 		reads1k: "Reads mit >=1 k-Mere",
+		dbkmers: "k-mere in DB",
 		ok: "OK",
 		nosession: "Ihre Sitzung wurde beendet. Bitte melden Sie sich bei der Hauptanwendung an.",
 		novalidjob: "Ungültige oder fehlende Job ID. Keine Daten verfügbar.",
@@ -71,7 +75,7 @@ var i18n = {
 		statustext: "Status Text:",
 		responsetext: "Message:",
 		search: "Search:",
-		line: "Line",
+		pos: "Pos.",
 		rank: "Rank",
 		name: "Name",
 		taxid: "Tax Id",
@@ -83,12 +87,14 @@ var i18n = {
 		avgclen: "Avr. C. Length",
 		maxclen: "Max C. Length",
 		maxcdesc: "Max C. Descr.",
+		reads1k: "Reads with >=1 k-mers",
+		readsbps: "BPs in Reads",
+		avgreadlen: "Avg. Read Length",
 		dbcov: "Coverage",
 		nkmers: "Norm. k-mers",
 		euk: "Exp. u. k-mers",
 		ukeukr: "U. k-mers / Exp.",
-		qp: "Quality Prediction",
-		reads1k: "Reads with >=1 k-mers",
+		dbkmers: "k-mers in DB",
 		ok: "OK",
 		nosession: "Your session has terminated. Please login via the main application.",
 		novalidjob: "Inavlid oder missing job ID. No data to show.",
@@ -254,8 +260,8 @@ var job = null;
 var sortOrder = true;
 var lastSortField = null;
 var allData = null;
-var fields = ["name", "rank", "taxid", "reads", "kmersfr", "kmers", "ukmers", "contigs", "avgclen", "maxclen", "maxcdesc", "dbcov", "nkmers", "euk", "ukeukr", "qp", "reads1k"];
-var fieldTypes = ["s", "s", "s", "i", "i", "i", "i", "i", "d", "i", "s", "d", "d", "d", "d", "d", "i"];
+var fields = ["pos", "name", "rank", "taxid", "reads", "kmersfr", "kmers", "ukmers", "contigs", "avgclen", "maxclen", "reads1k", "readsbps", "avgreadlen", "dbcov", "euk", "ukeukr", "dbkmers" ];
+var fieldTypes = ["i", "s", "s", "s", "i", "i", "i", "i", "i", "d", "i", "i", "i", "d", "d", "d", "d", "i"];
 
 function sortTableData(field) {
 	if (allData != null) {
@@ -267,10 +273,16 @@ function sortTableData(field) {
 		document.getElementById(field + (sortOrder ? "down" : "up")).style.display = "";
 		lastSortField = field;
 		if (lastSortField == null) {
-			lastSortField = "line";
+			lastSortField = "pos";
 		}
 		allData.sort((a, b) => {
-			if (a[lastSortField] == b[lastSortField]) {
+			if (a[lastSortField] === "" && b[lastSortField] === 0) {
+				return sortOrder ? -1 : 1;
+			}
+			else if (b[lastSortField] === "" && a[lastSortField] === 0) {
+				return sortOrder ? 1 : -1;
+			}
+			else if (a[lastSortField] == b[lastSortField]) {
 				return 0;
 			}
 			else if (a[lastSortField] < b[lastSortField]) {
@@ -366,13 +378,12 @@ function csvToObjs(csv) {
 		var currentline = lines[i].split(";");
 		if (currentline.length >= fields.length) {
 			var obj = {};
-			obj.line = i;
 			for (var j = 0; j < fields.length; j++) {
 				if (fieldTypes[j] == "i") {
 					obj[fields[j]] = parseInt(currentline[j]);
 				}
 				else if (fieldTypes[j] == "d") {
-					obj[fields[j]] = parseFloat(currentline[j]);
+					obj[fields[j]] = "" == currentline[j] ? "" : parseFloat(currentline[j]);
 				}
 				else {
 					obj[fields[j]] = currentline[j];
@@ -407,7 +418,7 @@ function updateDataTable() {
 		var line = allData[i];
 
 		var tr = "<tr class=\"tnormal\">";
-		tr = tr + "<td>" + line.line + "</td>";
+		tr = tr + "<td>" + htmlEscape(line.pos) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.name) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.rank) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.taxid) + "</td>";
@@ -418,12 +429,13 @@ function updateDataTable() {
 		tr = tr + "<td>" + htmlEscape(line.contigs) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.avgclen) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.maxclen) + "</td>";
+		tr = tr + "<td>" + htmlEscape(line.reads1k) + "</td>";
+		tr = tr + "<td>" + htmlEscape(line.readsbps) + "</td>";
+		tr = tr + "<td>" + htmlEscape(line.avgreadlen) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.dbcov) + "</td>";
-		tr = tr + "<td>" + htmlEscape(line.nkmers) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.euk) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.ukeukr) + "</td>";
-		tr = tr + "<td>" + htmlEscape(line.qp) + "</td>";
-		tr = tr + "<td>" + htmlEscape(line.reads1k) + "</td>";
+		tr = tr + "<td>" + htmlEscape(line.dbkmers) + "</td>";
 /*		tr = tr + "<td>" + htmlEscape(line.maxcdesc) + "</td>"; */
 		tr = tr + "</tr>";
 
