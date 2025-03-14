@@ -322,7 +322,7 @@ function newJob() {
 	job.status = null;
 	job.coveredBytes = null;
 	job.jobType = "UPLOAD_MATCH";
-	job.classifyReads = false;
+	job.classifyReads = true;
 	job.errorRate = errorRateDefault;
 
 	return job;
