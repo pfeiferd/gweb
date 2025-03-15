@@ -191,6 +191,16 @@ var restPath = "<%=request.getContextPath()%>" + "/rest";
 								class="featherc sorticon">
 												<use href="feather-sprite.svg#chevron-up" /></svg>
 						</div></th>
+					<th class="sortable" onclick="sortTableData('accreads')"><span
+							data-i18n="accreads"></span>
+						<div style="width: 16px; display: inline-block">
+							<svg id="accreadsdown" style="display: none;"
+								 class="featherc sorticon">
+								<use href="feather-sprite.svg#chevron-down" /></svg>
+							<svg id="accreadsup" style="display: none;"
+								 class="featherc sorticon">
+								<use href="feather-sprite.svg#chevron-up" /></svg>
+						</div></th>
 					<th class="sortable" onclick="sortTableData('kmersfr')"><span
 						data-i18n="kmersfr"></span>
 						<div style="width: 16px; display: inline-block">
@@ -210,6 +220,16 @@ var restPath = "<%=request.getContextPath()%>" + "/rest";
 							<svg id="kmersup" style="display: none;"
 								class="featherc sorticon">
 												<use href="feather-sprite.svg#chevron-up" /></svg>
+						</div></th>
+					<th class="sortable" onclick="sortTableData('acckmers')"><span
+							data-i18n="acckmers"></span>
+						<div style="width: 16px; display: inline-block">
+							<svg id="acckmersdown" style="display: none;"
+								 class="featherc sorticon">
+								<use href="feather-sprite.svg#chevron-down" /></svg>
+							<svg id="acckmersup" style="display: none;"
+								 class="featherc sorticon">
+								<use href="feather-sprite.svg#chevron-up" /></svg>
 						</div></th>
 					<th class="sortable" onclick="sortTableData('ukmers')"><span
 						data-i18n="ukmers"></span>

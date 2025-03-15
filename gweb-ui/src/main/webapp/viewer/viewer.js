@@ -44,6 +44,8 @@ var i18n = {
 		rank: "Rang",
 		taxid: "Tax Id",
 		reads: "Reads",
+		accreads: "Akkum. Reads",
+		acckmers: "Akkum. k-Mere",
 		kmersfr: "k-Mere v. Reads",
 		contigs: "Contigs",
 		avgclen: "Mittl. C.länge",
@@ -80,6 +82,8 @@ var i18n = {
 		name: "Name",
 		taxid: "Tax Id",
 		reads: "Reads",
+		accreads: "Acc. Reads",
+		acckmers: "Acc. k-mers",
 		kmersfr: "k-mers f. Reads",
 		kmers: "k-mers",
 		ukmers: "Unique k-mers",
@@ -260,8 +264,8 @@ var job = null;
 var sortOrder = true;
 var lastSortField = null;
 var allData = null;
-var fields = ["pos", "name", "rank", "taxid", "reads", "kmersfr", "kmers", "ukmers", "contigs", "avgclen", "maxclen", "reads1k", "readsbps", "avgreadlen", "dbcov", "euk", "ukeukr", "dbkmers" ];
-var fieldTypes = ["i", "s", "s", "s", "i", "i", "i", "i", "i", "d", "i", "i", "i", "d", "d", "d", "d", "i"];
+var fields = ["pos", "name", "rank", "taxid", "reads", "kmersfr", "kmers", "ukmers", "contigs", "avgclen", "maxclen", "reads1k", "readsbps", "avgreadlen", "dbcov", "euk", "ukeukr", "dbkmers", "na", "na", "na", "na", "na", "na", "accreads", "na", "acckmers" ];
+var fieldTypes = ["i", "s", "s", "s", "i", "i", "i", "i", "i", "d", "i", "i", "i", "d", "d", "d", "d", "i", "i", "i", "i", "i", "i", "i", "i", "i", "i"];
 
 function sortTableData(field) {
 	if (allData != null) {
@@ -380,7 +384,7 @@ function csvToObjs(csv) {
 			var obj = {};
 			for (var j = 0; j < fields.length; j++) {
 				if (fieldTypes[j] == "i") {
-					obj[fields[j]] = parseInt(currentline[j]);
+					obj[fields[j]] =  "" == currentline[j] ? "" : parseInt(currentline[j]);
 				}
 				else if (fieldTypes[j] == "d") {
 					obj[fields[j]] = "" == currentline[j] ? "" : parseFloat(currentline[j]);
@@ -423,8 +427,10 @@ function updateDataTable() {
 		tr = tr + "<td>" + htmlEscape(line.rank) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.taxid) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.reads) + "</td>";
+		tr = tr + "<td>" + htmlEscape(line.accreads) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.kmersfr) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.kmers) + "</td>";
+		tr = tr + "<td>" + htmlEscape(line.acckmers) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.ukmers) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.contigs) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.avgclen) + "</td>";
