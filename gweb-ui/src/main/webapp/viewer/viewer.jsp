@@ -91,14 +91,16 @@ var restPath = "<%=request.getContextPath()%>" + "/rest";
 						oninput="coloringChanged();">
 						<option class="colopt" id="optnocol" value="nocol" selected="selected"></option>
 						<option class="colopt" id="optreads" value="reads"></option>
+						<option class="colopt" id="optaccreads" value="accreads"></option>
 						<option class="colopt" id="optkmersfr" value="kmersfr"></option>
 						<option class="colopt" id="optkmers" value="kmers"></option>
+						<option class="colopt" id="optacckmers" value="acckmers"></option>
 						<option class="colopt" id="optukmers" value="ukmers"></option>
 						<option class="colopt" id="optcontigs" value="contigs"></option>
 						<option class="colopt" id="optavgclen" value="avgclen"></option>
 						<option class="colopt" id="optmaxclen" value="maxclen"></option>
-						<option class="colopt" id="optdbcov" value="dbcov"></option>
 						<option class="colopt" id="optukeukr" value="ukeukr"></option>
+						<option class="colopt" id="optdbcov" value="dbcov"></option>
 					</select>
 				</div>
 			</div>

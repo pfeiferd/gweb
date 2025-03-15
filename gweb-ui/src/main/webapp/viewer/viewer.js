@@ -470,7 +470,7 @@ function coloringChanged() {
 }
 
 function colorTableRow(colorBy, line, row, min, max) {
-	if (colorBy == "nocol" || line.name == "root" || line.name == "TOTAL") {
+	if (colorBy == "nocol" || line.name == "TOTAL") {
 		row.style.backgroundColor = "";
 	}
 	else {
