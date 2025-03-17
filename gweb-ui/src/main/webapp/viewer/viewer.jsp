@@ -336,6 +336,22 @@ var restPath = "<%=request.getContextPath()%>" + "/rest";
 							<svg id="dbkmersup" style="display: none;" class="featherc sorticon">
 								<use href="feather-sprite.svg#chevron-up" /></svg>
 						</div></th>
+					<th class="sortable" onclick="sortTableData('meanerr')"><span
+							data-i18n="meanerr"></span>
+						<div style="width: 16px; display: inline-block">
+							<svg id="meanerrdown" style="display: none;" class="featherc sorticon">
+								<use href="feather-sprite.svg#chevron-down" /></svg>
+							<svg id="meanerrup" style="display: none;" class="featherc sorticon">
+								<use href="feather-sprite.svg#chevron-up" /></svg>
+						</div></th>
+					<th class="sortable" onclick="sortTableData('meanerrstddev')"><span
+							data-i18n="meanerrstddev"></span>
+						<div style="width: 16px; display: inline-block">
+							<svg id="meanerrstddevdown" style="display: none;" class="featherc sorticon">
+								<use href="feather-sprite.svg#chevron-down" /></svg>
+							<svg id="meanerrstddevup" style="display: none;" class="featherc sorticon">
+								<use href="feather-sprite.svg#chevron-up" /></svg>
+						</div></th>
 				</tr>
 			</thead>
 			<tbody>

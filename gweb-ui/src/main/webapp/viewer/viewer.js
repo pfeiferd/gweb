@@ -56,6 +56,8 @@ var i18n = {
 		ukmers: "Eindeutige k-Mere",
 		maxcdesc: "Max C. Deskr.",
 		dbcov: "Abdeckung",
+		meanerr: "Mittl. Fehler in Reads",
+		meanerrstddev: "Mittl. Fehler Std. Dev.",
 		nkmers: "Norm. k-Mere",
 		euk: "Erw. eind. K-Mere",
 		ukeukr: "Eind. K-Mere / Erw.",
@@ -95,6 +97,8 @@ var i18n = {
 		readsbps: "BPs in Reads",
 		avgreadlen: "Avg. Read Length",
 		dbcov: "Coverage",
+		meanerr: "Mean Err. in Reads",
+		meanerrstddev: "Mean Err. Std. Dev.",
 		nkmers: "Norm. k-mers",
 		euk: "Exp. u. k-mers",
 		ukeukr: "U. k-mers / Exp.",
@@ -264,8 +268,8 @@ var job = null;
 var sortOrder = true;
 var lastSortField = null;
 var allData = null;
-var fields = ["pos", "name", "rank", "taxid", "reads", "kmersfr", "kmers", "ukmers", "contigs", "avgclen", "maxclen", "reads1k", "readsbps", "avgreadlen", "dbcov", "euk", "ukeukr", "dbkmers", "na", "na", "na", "na", "na", "na", "accreads", "na", "acckmers" ];
-var fieldTypes = ["i", "s", "s", "s", "i", "i", "i", "i", "i", "d", "i", "i", "i", "d", "d", "d", "d", "i", "i", "i", "i", "i", "i", "i", "i", "i", "i"];
+var fields = ["pos", "name", "rank", "taxid", "reads", "kmersfr", "kmers", "ukmers", "contigs", "avgclen", "maxclen", "reads1k", "readsbps", "avgreadlen", "dbcov", "euk", "ukeukr", "dbkmers", "na", "na", "na", "meanerr", "meanerrstddev", "na", "na", "na", "na", "na", "accreads", "na", "acckmers" ];
+var fieldTypes = ["i", "s", "s", "s", "i", "i", "i", "i", "i", "d", "i", "i", "i", "d", "d", "d", "d", "i", "s", "d", "d", "d", "d", "i", "i", "i", "i", "i", "i", "i", "i"];
 
 function sortTableData(field) {
 	if (allData != null) {
@@ -442,6 +446,8 @@ function updateDataTable() {
 		tr = tr + "<td>" + htmlEscape(line.euk) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.ukeukr) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.dbkmers) + "</td>";
+		tr = tr + "<td>" + htmlEscape(line.meanerr) + "</td>";
+		tr = tr + "<td>" + htmlEscape(line.meanerrstddev) + "</td>";
 /*		tr = tr + "<td>" + htmlEscape(line.maxcdesc) + "</td>"; */
 		tr = tr + "</tr>";
 

@@ -227,7 +227,7 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 
 		private void match(GSProject project, GSMaker maker, GSGoalKey matchKey) {
 			if (job.getErrorRate() >= 0) {
-				project.initConfigParam(GSConfigKey.MAX_READ_TAX_ERROR_COUNT, job.getErrorRate());
+				project.initConfigParam(GSConfigKey.MAX_READ_CLASS_ERROR_COUNT, job.getErrorRate());
 			}
 			fetchDBFromCacheIfPossible(project, maker);
 			goal = maker.getGoal(matchKey);
