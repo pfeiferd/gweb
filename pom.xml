@@ -7,7 +7,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<revision>1.0</revision>
+		<revision>1.1</revision>
 	</properties>
 
 	<name>gweb</name>
