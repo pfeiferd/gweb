@@ -30,8 +30,8 @@ GWeb is a hybrid Web application to run jobs for genomic analysis using [Genestr
 
 ## Building and installing
 
-GWeb is structured as a standard project for [Maven 3.5 or higher](https://maven.apache.org/) with modules and is compatible with the [JDK](https://jdk.java.net/) 1.8 or higher.
-However, generating the local variant of GWeb requires the JDK 11 or higher on a Windows machine as it uses [JLink](https://docs.oracle.com/en/java/javase/11/tools/jlink.html).
+GWeb is structured as a standard project for [Maven 3.5 or higher](https://maven.apache.org/) with modules and is compatible with the [JDK](https://jdk.java.net/) 11 or higher.
+Generating the local variant of GWeb requires a Windows machine and uses [JLink](https://docs.oracle.com/en/java/javase/11/tools/jlink.html).
 
 GWeb is implemented as a hybrid Web application such that 
 * it can be run on a Servlet-based Web server (tested under Tomcat 10),

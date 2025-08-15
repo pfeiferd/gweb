@@ -42,11 +42,11 @@
 		</init-param>
 		<init-param>
 			<param-name>genestripBaseDir</param-name>
-			<param-value>/Users/dpfeifer/progotec-workspace/gweb/gweb-ui/data</param-value>
+			<param-value>/Users/dpfeifer/dev/intellij/gweb/gweb-ui/data</param-value>
 		</init-param>
 		<init-param>
 			<param-name>sqlDialect</param-name>
-			<param-value>POSTGRES</param-value>
+			<param-value>HSQL</param-value>
 		</init-param>
 	</servlet>
 	<servlet>
