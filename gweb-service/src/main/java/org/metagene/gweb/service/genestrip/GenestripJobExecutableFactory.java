@@ -62,6 +62,7 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 	private final GSCommon common;
 	private final StreamingResourceForJobProvider provider;
 
+	private Thread executingThread;
 	private Database storeCache;
 	private File storeCacheFile;
 
@@ -185,43 +186,48 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 			if (!project.getLogDir().exists()) {
 				project.getLogDir().mkdir();
 			}
-			File logFile = new File(project.getLogDir(), job.getId() + FileType.LOG.getSuffix());
-			try (OutputStream logOut = new FileOutputStream(logFile)) {
-				GSLogFactory.getInstance().setLogOutForThread(new PrintStream(logOut));
-				GSMaker maker = new GSMaker(project) {
-					@Override
-					protected ExecutionContext createExecutionContext(GSProject project) {
-						return bundle;
+			File logFile = new File(project.getLogDir(), job.getId() + GSProject.GSFileType.LOG.getSuffix());
+			try {
+				executingThread = Thread.currentThread();
+				try (OutputStream logOut = new FileOutputStream(logFile)) {
+					GSLogFactory.getInstance().setLogOutForThread(new PrintStream(logOut));
+					GSMaker maker = new GSMaker(project) {
+						@Override
+						protected ExecutionContext createExecutionContext(Thread t, GSProject project) {
+							return bundle;
+						}
+					};
+					try {
+						switch (job.getJobType()) {
+							case LOCAL_MATCH:
+							case RES_MATCH:
+							case UPLOAD_MATCH:
+								match(project, maker, matchKey);
+								break;
+							case DB_INFO:
+								genDBInfo(project, maker);
+								break;
+							case INSTALL_DB:
+								installDB(project, maker);
+								break;
+							default:
+								throw new IllegalStateException("Bad job type " + job.getJobType());
+						}
+						if (!finished) {
+							GSLogFactory.getLog(LOGGER_NAME).info("Job got canceled.");
+						}
+					} catch (Throwable t) {
+						GSLogFactory.getLog(LOGGER_NAME).error("Error during goal", t);
+						if (!finished) {
+							GSLogFactory.getLog(LOGGER_NAME).info("Job got canceled.");
+						}
+						throw t;
 					}
-				};
-				try {
-					switch (job.getJobType()) {
-					case LOCAL_MATCH:
-					case RES_MATCH:
-					case UPLOAD_MATCH:
-						match(project, maker, matchKey);
-						break;
-					case DB_INFO:
-						genDBInfo(project, maker);
-						break;
-					case INSTALL_DB:
-						installDB(project, maker);
-						break;
-					default:
-						throw new IllegalStateException("Bad job type " + job.getJobType());
-					}
-					if (!finished) {
-						GSLogFactory.getLog(LOGGER_NAME).info("Job got canceled.");
-					}
-				} catch (Throwable t) {
-					GSLogFactory.getLog(LOGGER_NAME).error("Error during goal", t);
-					if (!finished) {
-						GSLogFactory.getLog(LOGGER_NAME).info("Job got canceled.");
-					}
-					throw t;
+				} catch (IOException e) {
+					throw new RuntimeException(e);
 				}
-			} catch (IOException e) {
-				throw new RuntimeException(e);
+			} finally {
+				executingThread = null;
 			}
 		}
 
@@ -241,7 +247,7 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 		// We cache the last store, so that it does not have to be reloaded every
 		// time...
 		private void fetchDBFromCacheIfPossible(GSProject project, GSMaker maker) {
-			LoadDBGoal loadDBGoal = (LoadDBGoal) maker.getGoal(GSGoalKey.LOAD_DB);
+			LoadDBGoal<GSProject> loadDBGoal = (LoadDBGoal) maker.getGoal(GSGoalKey.LOAD_DB);
 			if (storeCache != null && storeCacheFile != null) {
 				if (project.getDBFile().equals(storeCacheFile) && !loadDBGoal.isMade()) {
 					loadDBGoal.setDatabase(storeCache);
@@ -361,7 +367,7 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 		}
 	}
 
-	protected static class MyDefaultExecutionContext extends DefaultExecutionContext {
+	protected class MyDefaultExecutionContext extends DefaultExecutionContext {
 		protected long coveredBytes;
 		protected long estTotalBytes;
 		protected long elapsedTimeMS;
@@ -369,7 +375,7 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 		protected double ratio;
 
 		public MyDefaultExecutionContext(int consumers, long logUpdateCycle) {
-			super(consumers, logUpdateCycle);
+			super(null, consumers, logUpdateCycle);
 		}
 
 		@Override
@@ -388,6 +394,14 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 			this.elapsedTimeMS = 0;
 			this.estTotalTimeMS = 0;
 			this.ratio = 0;
+		}
+
+		@Override
+		public void interruptAll() {
+			super.interruptAll();
+			if (executingThread != null) {
+				executingThread.interrupt();
+			}
 		}
 	}
 }
