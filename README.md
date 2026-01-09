@@ -39,7 +39,7 @@ GWeb is implemented as a hybrid Web application such that
 
 ### Web server variant
 
-`mvn clean install` will compile and test GWeb and generate the `war` file `./gweb-ui/target/gweb.war`, which may be deployed under Tomcat for example.
+`mvn clean install` will compile and test GWeb and generate the `war` file `./gweb-ui/target/gweb.war`, which may by deployed under Tomcat for example.
 The deployment requires a Postgres database (tested under Postgres 14) to be in reach under the JDBC URL `jdbc:postgresql://localhost/gweb` with a Postgres admin user `postgres` and password `postgres`.
 You may configure this via the file [`./gweb-ui/src/main/webapp/META-INF/context.xml`](https://github.com/pfeiferd/gweb/blob/master/gweb-ui/src/main/webapp/META-INF/context.xml).
 
