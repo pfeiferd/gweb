@@ -186,6 +186,8 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 			if (!project.getLogDir().exists()) {
 				project.getLogDir().mkdir();
 			}
+			// No progress bar, does not make sense in log. Would end up in stderr.
+			project.initConfigParam(GSConfigKey.PROGRESS_BAR, false);
 			File logFile = new File(project.getLogDir(), job.getId() + GSProject.GSFileType.LOG.getSuffix());
 			try {
 				executingThread = Thread.currentThread();

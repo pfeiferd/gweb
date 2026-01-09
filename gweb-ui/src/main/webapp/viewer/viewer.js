@@ -26,8 +26,6 @@ function updateHistory() {
 	}
 }
 
-var fields = ["pos", "name", "rank", "taxid", "reads", "kmersfr", "kmers", "ukmers", "contigs", "avgclen", "maxclen", "reads1k", "readsbps", "avgreadlen", "dbcov", "euk", "ukeukr", "dbkmers" ];
-
 /* I18n */
 
 var i18n = {
@@ -40,6 +38,7 @@ var i18n = {
 		responsetext: "Meldung:",
 		search: "Suchen:",
 		pos: "Pos.",
+		level: "Level",
 		name: "Name",
 		rank: "Rang",
 		taxid: "Tax Id",
@@ -80,6 +79,7 @@ var i18n = {
 		responsetext: "Message:",
 		search: "Search:",
 		pos: "Pos.",
+		level: "Level",
 		rank: "Rank",
 		name: "Name",
 		taxid: "Tax Id",
@@ -268,8 +268,8 @@ var job = null;
 var sortOrder = true;
 var lastSortField = null;
 var allData = null;
-var fields = ["pos", "name", "rank", "taxid", "reads", "kmersfr", "kmers", "ukmers", "contigs", "avgclen", "maxclen", "reads1k", "readsbps", "avgreadlen", "dbcov", "euk", "ukeukr", "dbkmers", "na", "na", "na", "meanerr", "meanerrstddev", "na", "na", "na", "na", "na", "accreads", "na", "acckmers" ];
-var fieldTypes = ["i", "s", "s", "s", "i", "i", "i", "i", "i", "d", "i", "i", "i", "d", "d", "d", "d", "i", "s", "d", "d", "d", "d", "i", "i", "i", "i", "i", "i", "i", "i"];
+var fields = ["pos", "level", "name", "rank", "taxid", "reads", "kmersfr", "kmers", "ukmers", "contigs", "avgclen", "maxclen", "reads1k", "readsbps", "avgreadlen", "dbcov", "euk", "ukeukr", "dbkmers", "na", "na", "na", "meanerr", "meanerrstddev", "na", "na", "na", "na", "na", "accreads", "na", "acckmers" ];
+var fieldTypes = ["i", "i", "s", "s", "s", "i", "i", "i", "i", "i", "d", "i", "i", "i", "d", "d", "d", "d", "i", "s", "d", "d", "d", "d", "i", "i", "i", "i", "i", "i", "i", "i"];
 
 function sortTableData(field) {
 	if (allData != null) {
@@ -427,6 +427,7 @@ function updateDataTable() {
 
 		var tr = "<tr class=\"tnormal\">";
 		tr = tr + "<td>" + htmlEscape(line.pos) + "</td>";
+		tr = tr + "<td>" + htmlEscape(line.level) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.name) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.rank) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.taxid) + "</td>";

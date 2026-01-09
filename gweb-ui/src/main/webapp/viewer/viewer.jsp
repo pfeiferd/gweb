@@ -155,6 +155,14 @@ var restPath = "<%=request.getContextPath()%>" + "/rest";
 							<svg id="posup" style="display: none;" class="featherc sorticon">
 												<use href="feather-sprite.svg#chevron-up" /></svg>
 						</div></th>
+					<th class="sortable" onclick="sortTableData('level')"><span
+							data-i18n="level"></span>
+						<div style="width: 16px; display: inline-block">
+							<svg id="leveldown" style="display: none;" class="featherc sorticon">
+								<use href="feather-sprite.svg#chevron-down" /></svg>
+							<svg id="levelup" style="display: none;" class="featherc sorticon">
+								<use href="feather-sprite.svg#chevron-up" /></svg>
+						</div></th>
 					<th class="sortable" onclick="sortTableData('name')"><span
 						data-i18n="name"></span>
 						<div style="width: 16px; display: inline-block">
