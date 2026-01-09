@@ -38,7 +38,8 @@ var i18n = {
 		statustext: "Status Text:",
 		responsetext: "Meldung:",
 		search: "Suchen:",
-		line: "Zeile",
+		pos: "Pos.",
+		level: "Level",
 		rank: "Rang",
 		name: "Name",
 		taxid: "Tax Id",
@@ -57,7 +58,8 @@ var i18n = {
 		statustext: "Status Text:",
 		responsetext: "Message:",
 		search: "Search:",
-		line: "Line",
+		pos: "Pos.",
+		level: "Level",
 		rank: "Rank",
 		name: "Name",
 		taxid: "Tax Id",
@@ -220,8 +222,8 @@ var db = null;
 var sortOrder = true;
 var lastSortField = null;
 var allData = null;
-var fields = ["name", "rank", "taxid", "kmers"];
-var fieldTypes = ["s", "s", "s", "i"];
+var fields = ["pos", "level", "name", "rank", "taxid", "kmers"];
+var fieldTypes = ["i", "i", "s", "s", "s", "i"];
 
 function sortTableData(field) {
 	if (allData != null) {
@@ -309,7 +311,6 @@ function csvToObjs(csv) {
 		var currentline = lines[i].split(";");
 		if (currentline.length >= fields.length) {
 			var obj = {};
-			obj.line = i;
 			for (var j = 0; j < fields.length; j++) {
 				if (fieldTypes[j] == "i") {
 					obj[fields[j]] = parseInt(currentline[j]);
@@ -339,7 +340,8 @@ function updateDBTable() {
 		var line = allData[i];
 
 		var tr = "<tr class=\"tnormal\">";
-		tr = tr + "<td>" + line.line + "</td>";
+		tr = tr + "<td>" + line.pos + "</td>";
+		tr = tr + "<td>" + line.level + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.name) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.rank) + "</td>";
 		tr = tr + "<td>" + htmlEscape(line.taxid) + "</td>";

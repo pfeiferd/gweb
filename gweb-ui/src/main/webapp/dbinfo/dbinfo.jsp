@@ -128,14 +128,23 @@ var restPath = "<%=request.getContextPath()%>" + "/rest";
 		<table class="datatable" id="dbtable">
 			<thead>
 				<tr>
-					<th class="sortable" onclick="sortTableData('line')"><span
-						data-i18n="line"></span>
+					<th class="sortable" onclick="sortTableData('pos')"><span
+						data-i18n="pos"></span>
 					<div style="width: 16px; display: inline-block">
-							<svg id="linedown" class="featherc sorticon">
+							<svg id="posdown" class="featherc sorticon">
 												<use href="feather-sprite.svg#chevron-down" /></svg>
-							<svg id="lineup" style="display: none;"
+							<svg id="posup" style="display: none;"
 								class="featherc sorticon">
 												<use href="feather-sprite.svg#chevron-up" /></svg>
+						</div></th>
+					<th class="sortable" onclick="sortTableData('level')"><span
+							data-i18n="level"></span>
+						<div style="width: 16px; display: inline-block;">
+							<svg id="leveldown" style="display: none;" class="featherc sorticon">
+								<use href="feather-sprite.svg#chevron-down" /></svg>
+							<svg id="levelup" style="display: none;"
+								 class="featherc sorticon">
+								<use href="feather-sprite.svg#chevron-up" /></svg>
 						</div></th>
 					<th class="sortable" onclick="sortTableData('name')"><span
 						data-i18n="name"></span>
