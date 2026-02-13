@@ -97,7 +97,7 @@ public class DB extends DTO {
 
 	public boolean checkURLValid() {
 		if (installURL != null && !installURL.isEmpty()) {
-			checkHTTPURLValid(installURL);
+			return checkHTTPURLValid(installURL) && checkURLSafe(installURL);
 		}
 		return true;
 	}

@@ -89,7 +89,8 @@ public class NetFileResource extends DTO {
 	public boolean checkURLValid() {
 		switch (type) {
 		case HTTP_URL:
-			return checkHTTPURLValid(url);
+			return checkHTTPURLValid(url) && checkURLSafe(url);
+			// TODO: This is very insecure. Best forbid 'FILE_PATH' for non-local deployment altogether...
 		case FILE_PATH:
 			return checkGLOBFilePath(url);
 		default:

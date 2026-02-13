@@ -25,10 +25,10 @@
 package org.metagene.gweb.service.dto;
 
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.*;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
+import org.metagene.gweb.service.ValidationException;
 
 @SuppressWarnings("serial")
 @XmlRootElement
@@ -73,5 +73,39 @@ public abstract class DTO implements Serializable, Cloneable {
 		} catch (MalformedURLException e) {
 			return false;
 		}
+	}
+
+	public static boolean checkURLSafe(String url) {
+		try {
+			URI uri = new URI(url);
+			String host = uri.getHost();
+
+			// Resolve host to IP addresses
+			InetAddress[] addresses = InetAddress.getAllByName(host);
+
+			for (InetAddress address : addresses) {
+				// Check for private IP ranges
+				if (address.isSiteLocalAddress() ||
+						address.isLoopbackAddress() ||
+						address.isLinkLocalAddress() ||
+						address.isAnyLocalAddress()) {
+					return false;
+				}
+
+				// Check for RFC 1918 addresses
+				byte[] ip = address.getAddress();
+				if (ip.length == 4) {
+					// Check for 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16
+					if ((ip[0] & 0xFF) == 10 ||
+							((ip[0] & 0xFF) == 172 && (ip[1] & 0xFF) >= 16 && (ip[1] & 0xFF) <= 31) ||
+							((ip[0] & 0xFF) == 192 && (ip[1] & 0xFF) == 168)) {
+						return false;
+					}
+				}
+			}
+		} catch (URISyntaxException | UnknownHostException e) {
+			return false;
+		}
+		return true;
 	}
 }
