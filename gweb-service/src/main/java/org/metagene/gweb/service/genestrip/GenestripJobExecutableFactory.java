@@ -105,7 +105,8 @@ public class GenestripJobExecutableFactory implements JobExecutable.Factory {
 
 		private String getFullFastqFilePath(String fileName) {
 			if (fileName != null) {
-				if (fileName.indexOf(File.pathSeparatorChar) != -1) {
+				if (fileName.indexOf(File.pathSeparatorChar) != -1 ||
+						fileName.indexOf(File.separatorChar) != -1) {
 					throw new IllegalStateException("Illegal fastq file name: " + fileName);
 				}
 				File dir = new File(common.getFastqDir(), String.valueOf(job.getUserId()));
