@@ -98,6 +98,8 @@ public class NetFileResource extends DTO {
 		}
 	}
 
+	// TODO: This is very insecure. Best forbid 'FILE_PATH' for non-local deployment altogether...
+	// At least ensure the glob pattern remain in a certain directory...
 	public boolean checkGLOBFilePath(String s) {
 		try {
 			File parent = new File(s).getParentFile();
