@@ -154,7 +154,7 @@ public class JobRoleService extends CRUDRoleService<JobService, Job> implements 
 		for (int i = 0; i < res.length; i++) {
 			j.setId(res[i]);
 			int index = Arrays.binarySearch(jobs, j, ID_DTO_COMPARATOR);
-			if (index == -1) {
+			if (index < 0) {
 				res[i] = DTO.INVALID_ID;
 			}
 		}
