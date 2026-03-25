@@ -268,7 +268,7 @@ var job = null;
 var sortOrder = true;
 var lastSortField = null;
 var allData = null;
-var fields = ["pos", "level", "name", "rank", "taxid", "reads", "kmersfr", "kmers", "ukmers", "contigs", "avgclen", "maxclen", "reads1k", "readsbps", "avgreadlen", "dbcov", "euk", "ukeukr", "dbkmers", "na", "na", "na", "meanerr", "meanerrstddev", "na", "na", "na", "na", "na", "accreads", "na", "acckmers" ];
+var fields = ["pos", "level", "name", "rank", "taxid", "reads", "kmersfr", "kmers", "ukmers", "contigs", "avgclen", "maxclen", "reads1k", "readsbps", "avgreadlen", "dbcov", "euk", "ukeukr", "dbkmers", "na", "na", "na", "meanerr", "meanerrstddev", "na", "na", "na", "na", "na", "na", "accreads", "na", "acckmers" ];
 var fieldTypes = ["i", "i", "s", "s", "s", "i", "i", "i", "i", "i", "d", "i", "i", "i", "d", "d", "d", "d", "i", "s", "d", "d", "d", "d", "i", "i", "i", "i", "i", "i", "i", "i"];
 
 function sortTableData(field) {
@@ -388,10 +388,10 @@ function csvToObjs(csv) {
 			var obj = {};
 			for (var j = 0; j < fields.length; j++) {
 				if (fieldTypes[j] == "i") {
-					obj[fields[j]] =  "" == currentline[j] ? "" : parseInt(currentline[j]);
+					obj[fields[j]] =  "" == currentline[j] ? 0 : parseInt(currentline[j]);
 				}
 				else if (fieldTypes[j] == "d") {
-					obj[fields[j]] = "" == currentline[j] ? "" : parseFloat(currentline[j]);
+					obj[fields[j]] = "" == currentline[j] ? 0 : parseFloat(currentline[j]);
 				}
 				else {
 					obj[fields[j]] = currentline[j];
