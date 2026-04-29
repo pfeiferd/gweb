@@ -3,10 +3,11 @@
 	<parent>
 		<artifactId>gweb</artifactId>
 		<groupId>org.genestrip</groupId>
-		<version>${revision}</version>
+		<version>1.5</version>
 	</parent>
 	<artifactId>gweb-ui</artifactId>
 	<packaging>war</packaging>
+	<version>1.5</version>
 
 	<properties>
 		<jersey.version>3.1.7</jersey.version>

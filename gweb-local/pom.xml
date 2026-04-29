@@ -3,10 +3,11 @@
 	<parent>
 		<artifactId>gweb</artifactId>
 		<groupId>org.genestrip</groupId>
-		<version>${revision}</version>
+		<version>1.5</version>
 	</parent>
 	<artifactId>gweb-local</artifactId>
 	<packaging>war</packaging>
+	<version>1.5</version>
 
 	<dependencies>
 		<dependency>

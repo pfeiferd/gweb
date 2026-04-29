@@ -3,10 +3,11 @@
 	<parent>
 		<artifactId>gweb</artifactId>
 		<groupId>org.genestrip</groupId>
-		<version>${revision}</version>
+		<version>1.5</version>
 	</parent>
 	<artifactId>gweb-launcher</artifactId>
 	<packaging>jar</packaging>
+	<version>1.5</version>
 
 	<properties>
 		<main.class>org.metagene.gweb.launcher.Main</main.class>

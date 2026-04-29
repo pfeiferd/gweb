@@ -2,12 +2,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.genestrip</groupId>
 	<artifactId>gweb</artifactId>
-	<version>${revision}</version>
+	<version>1.5</version>
 	<packaging>pom</packaging>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<revision>1.4</revision>
+		<revision>1.5</revision>
 	</properties>
 
 	<name>gweb</name>
@@ -84,6 +84,30 @@
 		</plugins>
 	</build>
 	<profiles>
+		<profile>
+			<id>init-version</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>versions-maven-plugin</artifactId>
+						<version>2.21.0</version>
+						<executions>
+							<execution>
+								<id>update-version</id>
+								<phase>clean</phase>
+								<goals>
+									<goal>set</goal>
+								</goals>
+								<configuration>
+									<newVersion>${revision}</newVersion>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 		<profile>
 			<id>spotless</id>
 			<build>
