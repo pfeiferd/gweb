@@ -36,7 +36,7 @@ import org.metagene.gweb.service.dto.User;
 
 public class FastqFileComputeService implements FastqFileService {
 	private static String[] fastqSuffix = new String[] { ".fastq", ".fq", ".fastq.gz", ".fq.gz", ".fastq.gzip",
-			".fq.gzip" };
+			".fq.gzip", ".fasta", ".fa", ".fna", ".fas", ".fasta.gz", ".fa.gz", ".fna.gz", ".fas.gz", ".fasta.gzip", ".fa.gzip", ".fna.gzip", ".fas.gzip" };
 
 	private final File fastqBaseDir;
 	private final UserService userService;

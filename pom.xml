@@ -2,12 +2,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.genestrip</groupId>
 	<artifactId>gweb</artifactId>
-	<version>1.5</version>
+	<version>1.6</version>
 	<packaging>pom</packaging>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<revision>1.5</revision>
+		<revision>1.6</revision>
 	</properties>
 
 	<name>gweb</name>
